@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from 'routes/Home';
 import Profile from 'routes/Profile';
 import Journal from 'routes/Journal';
 import Analysis from 'routes/Analysis';
@@ -10,6 +11,7 @@ const AppRouter = () => {
     return (
         <Router base='/'>
             <Routes>
+                <Route path='/' element={<Home />} />
                 { isLoggedIn ? (
                     <>
                         <Route exact path='/user/profile' element={<Profile />} />
@@ -17,7 +19,7 @@ const AppRouter = () => {
                     </>
                 ) : (
                     <Route path='/user' element={<Auth />} />
-                )}
+                    )}
                 <Route exact path='/analysis' element={<Analysis />} />
                 <Route exact path='/foodpedia' element={<Foodpedia />} />
             </Routes>

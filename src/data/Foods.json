@@ -11,16 +11,6 @@
     },
     {
         "id": 2,
-        "name": "almond",
-        "calories_per_gram": 0.887,
-        "unit" : "개",
-        "gram_small" : -1,
-        "gram_normal": 100,
-        "gram_big" : -1,
-        "category": "fruit"
-    },
-    {
-        "id": 3,
         "name": "banana",
         "calories_per_gram": 0.887,
         "unit" : "개",
