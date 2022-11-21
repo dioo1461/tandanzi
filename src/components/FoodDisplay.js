@@ -1,7 +1,7 @@
 
 
-const FoodDisplay = (currentFood) => {
-
+const FoodDisplay = ({currentFood}) => {
+    console.log('currentFood.name : ', currentFood.name);
     return (
         <div>
             {currentFood.name}
