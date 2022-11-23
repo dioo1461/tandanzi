@@ -1,7 +1,8 @@
 import {useState, useEffect} from 'react';
 import foodData from 'data/Foods.json'
 import FoodDisplay from 'components/Analysis/FoodDisplay';
-import FoodSelected from 'components/Analysis/FoodSelected';
+import FoodModal from 'components/Analysis/FoodModal';
+import SelectedFoodDisplay from 'components/Analysis/SelectedFoodDisplay';
 
 const Analysis = () => {
     const [currentSearching, setCurrentSearching] = useState("");
@@ -12,6 +13,8 @@ const Analysis = () => {
 
     const [currentFoodNum, setCurrentFoodNum] = useState(0);
     const [isUnitGram, setisUnitGram] = useState(true);
+
+    const [selectedFoodList, setSelectedFoodList] = useState([]); // {key: food, foodNum}
 
     const isNameCorrect = (element) => {
         if (currentSearching === '') {
@@ -42,6 +45,31 @@ const Analysis = () => {
     }
 
     const getModalExit = () => setIsModalEnabled(false);
+    const getCurrentFoodNum = (num) =>  {
+        if (num<=0) {
+            return;
+        }
+        //setCurrentFoodNum(num);
+        let isDuplicateExists = false;
+        let idx = 0;
+        (function findDuplicates() {
+            for (idx; idx<selectedFoodList.length; idx++) {
+                console.log(idx);
+                if (selectedFoodList[idx].food.name === currentFood.name) {
+                    isDuplicateExists = true;
+                    break;
+                }
+            }
+        })();
+        if (!isDuplicateExists) {
+            setSelectedFoodList([...selectedFoodList, {food: currentFood, num: Number(num)}]);
+        } else {
+            selectedFoodList[idx].num += Number(num);
+        }
+        console.log(selectedFoodList);
+    }
+    
+    const getFoodList = (foodList) => foodList;
 
     return (
         <div>
@@ -53,7 +81,12 @@ const Analysis = () => {
                 {foodArr.map((element) =>
                     <FoodDisplay key={element.id} currentFood={element} getFoodClick={getFoodClick}/>
                 )}
-                { isModalEnabled && <FoodSelected currentFood={currentFood} isModalEnabled={isModalEnabled} getModalExit={getModalExit} />}
+                { isModalEnabled && <FoodModal currentFood={currentFood} isModalEnabled={isModalEnabled} getModalExit={getModalExit} getCurrentFoodNum={getCurrentFoodNum}/>}
+                <br/>
+                -- Selected Foods --
+                {selectedFoodList.map((element) => 
+                    <SelectedFoodDisplay key={element.food.id} currentFood={element}/>)                   
+                }
             </div>
         </div>
     )
