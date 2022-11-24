@@ -8,7 +8,7 @@ const Analysis = () => {
     const [currentSearching, setCurrentSearching] = useState("");
     const [foodArr, setFoodArr] = useState([]);
 
-    const [currentFood, setCurrentFood] = useState(null);
+    const [currentFood, setCurrentFood] = useState(null); // {key: food, foodNum}
     const [isModalEnabled, setIsModalEnabled] = useState(false);
 
     const [currentFoodNum, setCurrentFoodNum] = useState(0);
@@ -39,8 +39,8 @@ const Analysis = () => {
         setCurrentSearching(value);
     }
 
-    const getFoodClick = (currentFood) => {
-        setCurrentFood(currentFood);
+    const getFoodClick = (food) => {
+        setCurrentFood({food, num: 0});
         setIsModalEnabled(true);
     }
 
@@ -49,27 +49,34 @@ const Analysis = () => {
         if (num<=0) {
             return;
         }
-        //setCurrentFoodNum(num);
         let isDuplicateExists = false;
         let idx = 0;
         (function findDuplicates() {
             for (idx; idx<selectedFoodList.length; idx++) {
                 console.log(idx);
-                if (selectedFoodList[idx].food.name === currentFood.name) {
+                if (selectedFoodList[idx].food.name === currentFood.food.name) {
                     isDuplicateExists = true;
                     break;
                 }
             }
         })();
         if (!isDuplicateExists) {
-            setSelectedFoodList([...selectedFoodList, {food: currentFood, num: Number(num)}]);
+            setSelectedFoodList([...selectedFoodList, {food: currentFood.food, num: Number(num)}]);
         } else {
-            selectedFoodList[idx].num += Number(num);
+            selectedFoodList[idx].num = Number(num);
         }
-        console.log(selectedFoodList);
+        //console.log(selectedFoodList);
     }
     
-    const getFoodList = (foodList) => foodList;
+    const getEditEnter = (food, num) => {
+        setIsModalEnabled(true);
+        setCurrentFood({food, num});
+    }
+    const getDeleteEnter = (food) => {
+        setIsModalEnabled(false);
+        setSelectedFoodList(selectedFoodList.filter((element) => element.food.id !== food.id));
+        console.log("delete")
+    }
 
     return (
         <div>
@@ -79,13 +86,28 @@ const Analysis = () => {
             <div>
                 {/* 검색어에 맞는 음식들을 표시*/}
                 {foodArr.map((element) =>
-                    <FoodDisplay key={element.id} currentFood={element} getFoodClick={getFoodClick}/>
+                    <FoodDisplay 
+                        key={element.id} 
+                        currentFood={element} 
+                        getFoodClick={getFoodClick}
+                    />
                 )}
-                { isModalEnabled && <FoodModal currentFood={currentFood} isModalEnabled={isModalEnabled} getModalExit={getModalExit} getCurrentFoodNum={getCurrentFoodNum}/>}
+                { isModalEnabled && 
+                <FoodModal 
+                    currentFood={currentFood}
+                    isModalEnabled={isModalEnabled} 
+                    getModalExit={getModalExit} 
+                    getCurrentFoodNum={getCurrentFoodNum}
+                />}
                 <br/>
                 -- Selected Foods --
                 {selectedFoodList.map((element) => 
-                    <SelectedFoodDisplay key={element.food.id} currentFood={element}/>)                   
+                    <SelectedFoodDisplay 
+                        key={element.food.id} 
+                        currentFood={element} 
+                        getEditEnter={getEditEnter} 
+                        getDeleteEnter={getDeleteEnter} 
+                    />)                   
                 }
             </div>
         </div>

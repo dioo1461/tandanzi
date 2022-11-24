@@ -18,5 +18,15 @@
         "gram_normal": 100,
         "gram_big" : -1,
         "category": "fruit"
+    },
+	{
+        "id": 3,
+        "name": "almond",
+        "calories_per_gram": 0.578,
+        "unit" : "개",
+        "gram_small" : -1,
+        "gram_normal": 7,
+        "gram_big" : -1,
+        "category": "nut"
     }
 ]
