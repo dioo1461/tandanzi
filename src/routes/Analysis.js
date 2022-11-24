@@ -1,20 +1,19 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect,} from 'react';
 import foodData from 'data/Foods.json'
 import FoodDisplay from 'components/Analysis/FoodDisplay';
 import FoodModal from 'components/Analysis/FoodModal';
 import SelectedFoodDisplay from 'components/Analysis/SelectedFoodDisplay';
+import CalorieCalculation from 'components/Analysis/CalorieCalculation';
 
 const Analysis = () => {
     const [currentSearching, setCurrentSearching] = useState("");
     const [foodArr, setFoodArr] = useState([]);
 
-    const [currentFood, setCurrentFood] = useState(null); // {key: food, foodNum}
+    const [currentFood, setCurrentFood] = useState(null); // {key: food, foodNum, isGram, calories}
     const [isModalEnabled, setIsModalEnabled] = useState(false);
 
-    const [currentFoodNum, setCurrentFoodNum] = useState(0);
-    const [isUnitGram, setisUnitGram] = useState(true);
-
-    const [selectedFoodList, setSelectedFoodList] = useState([]); // {key: food, foodNum}
+    const [selectedFoodList, setSelectedFoodList] = useState([]); // element={key: food, foodNum, isGram, calories}
+    const [totalCalories, setTotalCalories] = useState(0);
 
     const isNameCorrect = (element) => {
         if (currentSearching === '') {
@@ -40,12 +39,14 @@ const Analysis = () => {
     }
 
     const getFoodClick = (food) => {
-        setCurrentFood({food, num: 0});
+        setCurrentFood({food, num: 0, isGram:false});
         setIsModalEnabled(true);
     }
 
-    const getModalExit = () => setIsModalEnabled(false);
-    const getCurrentFoodNum = (num) =>  {
+    const getModalExit = () => {
+        setIsModalEnabled(false);
+    }
+    const getCurrentFoodFromModal = (num, isGram, calories) =>  {
         if (num<=0) {
             return;
         }
@@ -53,7 +54,6 @@ const Analysis = () => {
         let idx = 0;
         (function findDuplicates() {
             for (idx; idx<selectedFoodList.length; idx++) {
-                console.log(idx);
                 if (selectedFoodList[idx].food.name === currentFood.food.name) {
                     isDuplicateExists = true;
                     break;
@@ -61,29 +61,55 @@ const Analysis = () => {
             }
         })();
         if (!isDuplicateExists) {
-            setSelectedFoodList([...selectedFoodList, {food: currentFood.food, num: Number(num)}]);
+            setSelectedFoodList([...selectedFoodList, {food: currentFood.food, num: Number(num), isGram, calories}]);
         } else {
-            selectedFoodList[idx].num = Number(num);
+            selectedFoodList[idx] = {...selectedFoodList[idx], num: Number(num), isGram, calories};
         }
-        //console.log(selectedFoodList);
     }
     
-    const getEditEnter = (food, num) => {
+    const getEditEnter = (currentFood) => {
         setIsModalEnabled(true);
-        setCurrentFood({food, num});
+        setCurrentFood(currentFood);
     }
     const getDeleteEnter = (food) => {
-        setIsModalEnabled(false);
         setSelectedFoodList(selectedFoodList.filter((element) => element.food.id !== food.id));
-        console.log("delete")
     }
+    
+    const sumAllCalories = () => {
+        let sum = 0;
+        selectedFoodList.map((element) => sum+=element.calories);
+        setTotalCalories(sum);
+    }
+    useEffect(sumAllCalories,[isModalEnabled, selectedFoodList]);
+    
 
     return (
         <div>
-            <form> 
+            <form>
                 <input type='text' onChange={searchOnChange} value={currentSearching} />
             </form>
             <div>
+                
+                { isModalEnabled && 
+                <FoodModal 
+                    currentFood={currentFood} 
+                    isModalEnabled={isModalEnabled} 
+                    getModalExit={getModalExit} 
+                    getCurrentFoodFromModal={getCurrentFoodFromModal}
+                />}
+                <br/>
+                -- Selected List --
+                {selectedFoodList.map((element) => 
+                    <SelectedFoodDisplay 
+                        key={element.food.id} 
+                        currentFood={element} 
+                        getEditEnter={getEditEnter}
+                        getDeleteEnter={getDeleteEnter} 
+                    />)                   
+                }
+                <br/>
+                Total Calories : 
+                {totalCalories.toFixed(1)} kcal
                 {/* 검색어에 맞는 음식들을 표시*/}
                 {foodArr.map((element) =>
                     <FoodDisplay 
@@ -92,23 +118,6 @@ const Analysis = () => {
                         getFoodClick={getFoodClick}
                     />
                 )}
-                { isModalEnabled && 
-                <FoodModal 
-                    currentFood={currentFood}
-                    isModalEnabled={isModalEnabled} 
-                    getModalExit={getModalExit} 
-                    getCurrentFoodNum={getCurrentFoodNum}
-                />}
-                <br/>
-                -- Selected Foods --
-                {selectedFoodList.map((element) => 
-                    <SelectedFoodDisplay 
-                        key={element.food.id} 
-                        currentFood={element} 
-                        getEditEnter={getEditEnter} 
-                        getDeleteEnter={getDeleteEnter} 
-                    />)                   
-                }
             </div>
         </div>
     )

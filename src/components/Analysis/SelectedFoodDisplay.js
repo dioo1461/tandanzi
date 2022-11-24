@@ -3,7 +3,7 @@ import { useState, } from 'react';
 const SelectedFoodDisplay = ({ currentFood, getEditEnter, getDeleteEnter }) => {
 
     const onClickEdit = () => {
-        getEditEnter(currentFood.food, currentFood.num);
+        getEditEnter(currentFood);
     }
     const onClickDelete = () => {
         getDeleteEnter(currentFood.food);
@@ -11,8 +11,8 @@ const SelectedFoodDisplay = ({ currentFood, getEditEnter, getDeleteEnter }) => {
     return (
         <>
             <div>
-                name: {currentFood.food.name},
-                num: {currentFood.num}
+                {`${currentFood.food.name}, 
+                ${currentFood.num}${currentFood.isGram ? currentFood.food.unit_name : ' unit'}`}
                 <button onClick={onClickEdit}>edit</button>
                 <button onClick={onClickDelete}>delete</button>
                 <br />
