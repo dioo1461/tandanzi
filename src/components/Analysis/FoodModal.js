@@ -9,7 +9,10 @@ const FoodModal = ({currentFood, isModalEnabled, getModalExit, getCurrentFoodFro
     const [gramNum, setGramNum] = useState(currentFood.num);
     const [isGram, setIsGram] = useState(currentFood.isGram);
     const [calories, setCalories] = useState(0);
-
+    const [carbs, setCarbs] = useState(0);
+    const [protein, setProtein] = useState(0);
+    const [fat, setFat] = useState(0);
+    
     const onChange = (event) => {
         if (event.target.value >= 0) {
             setDisplayNum(event.target.value);
@@ -26,7 +29,9 @@ const FoodModal = ({currentFood, isModalEnabled, getModalExit, getCurrentFoodFro
         setGramNum(displayNum * currentFood.food.gram_per_unit);
     }, [displayNum]);
 
-    const getCalories = (calories) => {setCalories(calories);}
+    const getCalories = (calories) => {
+        setCalories(calories);
+    }
 
     const onSubmit = (event) => {
         event.preventDefault();
@@ -51,6 +56,14 @@ const FoodModal = ({currentFood, isModalEnabled, getModalExit, getCurrentFoodFro
                         <br/>
                         Unit : {isGram ? currentFood.food.unit_name : 'unit'} 
                         <div onClick={toggleUnit}>click to change unit</div>
+                        <br/>
+                        {` 탄 : ${(isGram ? currentFood.food.carbs / currentFood.food.gram_per_unit * displayNum
+                        : currentFood.food.carbs * displayNum).toFixed(1) }  단 : 
+                        ${(isGram ? currentFood.food.protein / currentFood.food.gram_per_unit * displayNum
+                            : currentFood.food.protein * displayNum).toFixed(1)}  지 : 
+                        ${(isGram ? currentFood.food.fat / currentFood.food.gram_per_unit * displayNum
+                            : currentFood.food.fat * displayNum).toFixed(1)}
+                        `}
                         <br/>
                         Calories : 
                         <CalorieCalculation

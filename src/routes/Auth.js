@@ -3,9 +3,9 @@
 const Auth = () => {
 
 
-    return(
+    return (
         <>
-        Auth
+            Current Page : Auth
         </>
     )
 }

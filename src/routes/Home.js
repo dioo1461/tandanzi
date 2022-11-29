@@ -4,10 +4,10 @@ const Home = () => {
 
     return (
         <>
-            Home
+            Current Page : Home
             <br/>
             <br/>
-            Menu
+            --Menu--
             <br/>
             <a href='/Analysis'>Analysis</a>
         </>
