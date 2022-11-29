@@ -15,16 +15,29 @@ const Analysis = () => {
     const [selectedFoodList, setSelectedFoodList] = useState([]); // element={key: food, foodNum, isGram, calories}
     const [totalCalories, setTotalCalories] = useState(0);
 
+    const [displayLimit, setDisplayLimit] = useState(0);
+
     const isNameCorrect = (element) => {
         if (currentSearching === '') {
             return true;
         }
-        for (let i=0; i<currentSearching.length; i++) {
-            if (element.name[i] !== currentSearching[i]) {
-                return false;
+        let flag = false;
+        let cnt=0;
+        let i = 0;
+        let j = 0;
+        for (i; i<element.name.length; i++) {
+            if (element.name[i] === currentSearching[j]) {
+                cnt++;
+                j++;
+            } else {
+                cnt=0;
+                j=0;
+            }
+            if (cnt === currentSearching.length) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
     
     useEffect(() => {
