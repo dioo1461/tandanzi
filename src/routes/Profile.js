@@ -2,9 +2,9 @@ import { useState, } from 'react';
 
 const Profile = () => {
 
-    return(
+    return (
         <>
-            Profile
+            Current Page : Profile
         </>
     )
 

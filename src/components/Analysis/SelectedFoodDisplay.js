@@ -13,6 +13,7 @@ const SelectedFoodDisplay = ({ currentFood, getEditEnter, getDeleteEnter }) => {
             <div>
                 {`${currentFood.food.name}, 
                 ${currentFood.num}${currentFood.isGram ? currentFood.food.unit_name : ' unit'}`}
+                {!currentFood.isGram && `(${currentFood.food.gram_per_unit * currentFood.num}${currentFood.food.unit_name})`}
                 <button onClick={onClickEdit}>edit</button>
                 <button onClick={onClickDelete}>delete</button>
                 <br />

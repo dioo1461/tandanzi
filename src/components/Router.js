@@ -19,7 +19,7 @@ const AppRouter = () => {
                     </>
                 ) : (
                     <Route path='/user' element={<Auth />} />
-                    )}
+                    )} 
                 <Route exact path='/analysis' element={<Analysis />} />
                 <Route exact path='/foodpedia' element={<Foodpedia />} />
             </Routes>

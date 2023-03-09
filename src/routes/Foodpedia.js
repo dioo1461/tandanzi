@@ -4,7 +4,7 @@ const Foodpedia = () => {
 
     return (
         <>
-            Foodpedia
+            Current Page : Foodpedia
         </>
     )
 }

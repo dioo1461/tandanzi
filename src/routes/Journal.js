@@ -4,7 +4,7 @@ const Journal = () => {
 
     return(
         <>
-            Journal
+            Current Page : Journal
         </>
     )
 }

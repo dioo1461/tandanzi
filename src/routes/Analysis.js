@@ -24,10 +24,7 @@ const Analysis = () => {
         if (currentSearching === '') {
             return true;
         }
-        let flag = false;
-        let cnt = 0;
-        let i = 0;
-        let j = 0;
+        let cnt = 0, i = 0, j = 0;
         for (i; i < element.name.length; i++) {
             if (element.name[i] === currentSearching[j]) {
                 cnt++;
