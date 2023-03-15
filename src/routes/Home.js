@@ -1,16 +1,15 @@
-
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 const Home = () => {
 
     return (
-        <>
-            Current Page : Home
-            <br/>
-            <br/>
-            --Menu--
-            <br/>
-            <a href='/Analysis'>Analysis</a>
-        </>
+        <Container>
+            <Row>
+                <Col>Home</Col>
+            </Row>
+        </Container>
     )
 }
 
