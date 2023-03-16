@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import Modal from 'react-modal';
-import FoodDisplay from 'components/Analysis/FoodDisplay'
+import FoodDisplay from 'components/analysis/FoodDisplay'
 import CalorieCalculation from './CalorieCalculation';
 
 const FoodModal = ({currentFood, isModalEnabled, getModalExit, getCurrentFoodFromModal}) => {

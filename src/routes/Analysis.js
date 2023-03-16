@@ -1,9 +1,10 @@
 import { useState, useEffect, } from 'react';
 import foodData from 'data/Foods.json'
-import FoodDisplay from 'components/Analysis/FoodDisplay';
-import FoodModal from 'components/Analysis/FoodModal';
-import SelectedFoodDisplay from 'components/Analysis/SelectedFoodDisplay';
-import CalorieCalculation from 'components/Analysis/CalorieCalculation';
+import FoodDisplay from 'components/analysis/FoodDisplay';
+import FoodModal from 'components/analysis/FoodModal';
+import SelectedFoodDisplay from 'components/analysis/SelectedFoodDisplay';
+import CalorieCalculation from 'components/analysis/CalorieCalculation';
+import { Form } from 'react-bootstrap';
 
 const Analysis = () => {
     const [currentSearching, setCurrentSearching] = useState("");
