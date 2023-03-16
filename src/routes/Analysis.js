@@ -42,7 +42,7 @@ const Analysis = () => {
     }
 
     useEffect(() => {
-        // 검색어와 이름의 앞부분이 일치하는 객체들을 배열 foodArr에 담음
+        // 검색어와 이름의 일부가 일치하는 객체들을 배열 foodArr에 담음
         const newArr = foodData.filter(isNameCorrect);
         setFoodArr(newArr);
     }, [currentSearching]);
@@ -110,9 +110,8 @@ const Analysis = () => {
 
     return (
         <div>
-            <form>
-                <input type='text' onChange={searchOnChange} value={currentSearching} />
-            </form>
+            <Form.Control type='text' onChange={searchOnChange} value={currentSearching}>
+            </Form.Control>
             <div>
 
                 {isModalEnabled &&
