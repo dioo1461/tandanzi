@@ -1,5 +1,6 @@
 import { useState, useEffect, } from 'react';
-import foodData from 'data/Foods.json'
+import foodData from 'data/Foods.json';
+import categoryData from 'data/Categories.json';
 import FoodDisplay from 'components/analysis/FoodDisplay';
 import FoodSelectModal from 'components/analysis/FoodSelectModal';
 import SelectedFoodDisplay from 'components/analysis/SelectedFoodDisplay';
@@ -23,6 +24,10 @@ const Analysis = () => {
 
     const [isCategoryOpened, setIsCategoryOpened] = useState(false);
     const [isCategoryEnabled, setIsCategoryEnabled] = useState(false);
+    const [firstCategory, setFirstCategory] = useState('');
+    const [secondCategory, setSecondCategory] = useState('');
+    const [thirdCategory, setThirdCategory] = useState('');
+
 
     const isNameCorrect = (element) => {
         if (currentSearching === '') {
@@ -44,11 +49,34 @@ const Analysis = () => {
         return false;
     }
 
+    const isCategoryCorrect = (element) => {
+        if (firstCategory !== '' && firstCategory !== element.category_first) {
+            console.log(firstCategory);
+            console.log(element.category_first);
+            return false;
+        }
+        if (secondCategory !== '' && secondCategory !== element.category_second) {
+            console.log(secondCategory);
+            console.log(element.category_second);
+            return false;
+        }
+        if (thirdCategory !== '' && thirdCategory !== element.category_third) {
+            console.log(secondCategory);
+            console.log(element.category_second);
+            return false;
+        }
+        console.log(true);
+        return true;
+    }
+
     useEffect(() => {
         // 검색어와 이름의 일부가 일치하는 객체들을 배열 foodArr에 담음
-        const newArr = foodData.filter(isNameCorrect);
+        let newArr = foodData.filter(isNameCorrect);
+        if (isCategoryEnabled) {
+            newArr = newArr.filter(isCategoryCorrect);
+        }
         setFoodArr(newArr);
-    }, [currentSearching]);
+    }, [currentSearching, isCategoryEnabled]);
 
     const searchOnChange = (event) => {
         const { value } = event.target;
@@ -112,20 +140,23 @@ const Analysis = () => {
     const getCategories = (first, second, third) => {
         setIsCategoryEnabled(true);
         setIsCategoryOpened(false);
+        setFirstCategory(first);
+        setSecondCategory(second);
+        setThirdCategory(third);
     }
 
     const onCheckboxClick = () => {
         if (isCategoryEnabled) {
             setIsCategoryEnabled(false);
             setIsCategoryOpened(false);
+        } else if (isCategoryOpened) {
+            setIsCategoryOpened(false);
         } else {
-            setIsCategoryEnabled(true);
             setIsCategoryOpened(true);
         }
     }
 
     useEffect(sumAllNutrients, [isModalEnabled, selectedFoodList]);
-
 
     return (
         <div>
@@ -178,7 +209,7 @@ const Analysis = () => {
                 지 : ${totalFat.toFixed(1)}g`}
 
                 {/* 검색어와 일치하는 음식들을 나열*/}
-                {currentSearching === '' ? null : foodArr.map((element) =>
+                {foodArr.map((element) =>
                     <FoodDisplay
                         key={element.id}
                         currentFood={element}

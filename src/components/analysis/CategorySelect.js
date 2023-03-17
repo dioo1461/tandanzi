@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { Col, Container, Form, Row, Button } from "react-bootstrap";
+import categoryData from 'data/Categories.json';
 
 const CategorySelect = ({ getCategories }) => {
     const [first, setFirst] = useState('');
     const [second, setSecond] = useState('');
     const [third, setThird] = useState('');
 
-    const firstCategoryList = ['완제품', '신선류'];
+    const firstCategoryList = categoryData.map(firstFilter);
     const secondCategoryList = ['구이류', '국 및 탕류', '볶음류', '튀김류', '찜류', '면류'];
     const thirdCategoryList = ['1', '2', '3'];
+
+    const firstFilter = (element) => {
+        
+    }
 
     const onFirstSelectChange = (e) => {
         setFirst(e.target.value);
