@@ -1,10 +1,10 @@
 import { useState, useEffect, } from 'react';
 import foodData from 'data/Foods.json'
 import FoodDisplay from 'components/analysis/FoodDisplay';
-import FoodModal from 'components/analysis/FoodModal';
+import FoodSelectModal from 'components/analysis/FoodSelectModal';
 import SelectedFoodDisplay from 'components/analysis/SelectedFoodDisplay';
-import CalorieCalculation from 'components/analysis/CalorieCalculation';
-import { Form } from 'react-bootstrap';
+import { Form, Button, Container, InputGroup, Collapse } from 'react-bootstrap';
+import CategorySelect from 'components/analysis/CategorySelect';
 
 const Analysis = () => {
     const [currentSearching, setCurrentSearching] = useState("");
@@ -20,6 +20,9 @@ const Analysis = () => {
     const [totalFat, setTotalFat] = useState(0);
 
     const [displayLimit, setDisplayLimit] = useState(0);
+
+    const [isCategoryOpened, setIsCategoryOpened] = useState(false);
+    const [isCategoryEnabled, setIsCategoryEnabled] = useState(false);
 
     const isNameCorrect = (element) => {
         if (currentSearching === '') {
@@ -105,24 +108,59 @@ const Analysis = () => {
         sum = 0;
 
     }
+
+    const getCategories = (first, second, third) => {
+        setIsCategoryEnabled(true);
+        setIsCategoryOpened(false);
+    }
+
+    const onCheckboxClick = () => {
+        if (isCategoryEnabled) {
+            setIsCategoryEnabled(false);
+            setIsCategoryOpened(false);
+        } else {
+            setIsCategoryEnabled(true);
+            setIsCategoryOpened(true);
+        }
+    }
+
     useEffect(sumAllNutrients, [isModalEnabled, selectedFoodList]);
 
 
     return (
         <div>
-            <Form.Control type='text' onChange={searchOnChange} value={currentSearching}>
-            </Form.Control>
+            <Container fluid>
+
+                <Form.Check>
+                    <Form.Check.Input id='FormCheck' type='checkbox' onChange={onCheckboxClick} />
+                    <Form.Check.Label htmlFor='FormCheck'>카테고리 선택</Form.Check.Label>
+                </Form.Check>
+                <Collapse in={isCategoryOpened}>
+                    <div>
+                        <CategorySelect getCategories={getCategories}/>
+                    </div>
+                </Collapse>
+
+                <Form>
+                    <Form.Label>음식 이름을 입력하세요</Form.Label>
+                    <InputGroup>
+                        <Form.Control type='text' onChange={searchOnChange} value={currentSearching} />
+                        <Button variant='outline-secondary' onClick={() => setCurrentSearching('')}>clear</Button>
+                    </InputGroup>
+                </Form>
+            </Container>
             <div>
 
                 {isModalEnabled &&
-                    <FoodModal
+                    <FoodSelectModal
                         currentFood={currentFood}
                         isModalEnabled={isModalEnabled}
                         getModalExit={getModalExit}
-                        getCurrentFoodFromModal={getCurrentFoodFromModal}
+                         l={getCurrentFoodFromModal}
                     />}
                 <br />
-                -- Selected List --
+                {/*선택한 음식들을 나열, 칼로리를 계산 */}
+                선택한 식품 목록
                 {selectedFoodList.map((element) =>
                     <SelectedFoodDisplay
                         key={element.food.id}
@@ -132,14 +170,15 @@ const Analysis = () => {
                     />)
                 }
                 <br />
-                Total Calories :
+                총 칼로리 :
                 {totalCalories.toFixed(1)} kcal
                 <br />
                 {`탄 : ${totalCarbs.toFixed(1)}g  
                 단 : ${totalProtein.toFixed(1)}g  
                 지 : ${totalFat.toFixed(1)}g`}
-                {/* 검색어에 맞는 음식들을 표시*/}
-                {foodArr.map((element) =>
+
+                {/* 검색어와 일치하는 음식들을 나열*/}
+                {currentSearching === '' ? null : foodArr.map((element) =>
                     <FoodDisplay
                         key={element.id}
                         currentFood={element}

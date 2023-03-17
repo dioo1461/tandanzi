@@ -1,4 +1,5 @@
 import { useState, } from 'react';
+import { Button } from 'react-bootstrap';
 
 const SelectedFoodDisplay = ({ currentFood, getEditEnter, getDeleteEnter }) => {
 
@@ -14,8 +15,8 @@ const SelectedFoodDisplay = ({ currentFood, getEditEnter, getDeleteEnter }) => {
                 {`${currentFood.food.name}, 
                 ${currentFood.num}${currentFood.isGram ? currentFood.food.unit_name : ' unit'}`}
                 {!currentFood.isGram && `(${currentFood.food.gram_per_unit * currentFood.num}${currentFood.food.unit_name})`}
-                <button onClick={onClickEdit}>edit</button>
-                <button onClick={onClickDelete}>delete</button>
+                <Button variant='light' onClick={onClickEdit}>편집</Button>
+                <Button variant='light' onClick={onClickDelete}>삭제</Button>
                 <br />
             </div>
         </>
