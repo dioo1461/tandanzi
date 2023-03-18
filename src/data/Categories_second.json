@@ -4,7 +4,7 @@
 {"id":4,"name":"국 및 탕류","parent":"완제품","parent_id":1},
 {"id":5,"name":"기타","parent":"완제품","parent_id":1},
 {"id":6,"name":"김치류","parent":"완제품","parent_id":1},
-{"id":7,"name":"면 및 만두","parent":"완제품","parent_id":1},
+{"id":7,"name":"면 및 만두류","parent":"완제품","parent_id":1},
 {"id":8,"name":"밥류","parent":"완제품","parent_id":1},
 {"id":9,"name":"볶음류","parent":"완제품","parent_id":1},
 {"id":10,"name":"빵류","parent":"완제품","parent_id":1},

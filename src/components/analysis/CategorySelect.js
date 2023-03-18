@@ -49,7 +49,7 @@ const CategorySelect = ({ getCategories }) => {
     return (
 
         <Form>
-            <Form.Select value={first} onChange={onFirstSelectChange}>
+            <Form.Select className="mb-1" value={first} onChange={onFirstSelectChange}>
                 <option value=''>전체</option>
                 {firstCategoryList.map((element, index) => {
                     return (
@@ -58,7 +58,7 @@ const CategorySelect = ({ getCategories }) => {
                 })}
             </Form.Select>
             {first === '' ? null :
-                <Form.Select value={second} onChange={onSecondSelectChange}>
+                <Form.Select className="mb-1" value={second} onChange={onSecondSelectChange}>
                     <option value=''>전체</option>
                     {secondCategoryList.map((element, index) => {
                         return (
@@ -67,7 +67,7 @@ const CategorySelect = ({ getCategories }) => {
                     })}
                 </Form.Select>}
             {second === '' ? null :
-                <Form.Select value={third} onChange={onThirdSelectChange}>
+                <Form.Select className="mb-1" value={third} onChange={onThirdSelectChange}>
                     <option value=''>전체</option>
                     {thirdCategoryList.map((element, index) => {
                         return (
@@ -75,8 +75,8 @@ const CategorySelect = ({ getCategories }) => {
                         )
                     })}
                 </Form.Select>}
-            <Button variant='success' onClick={onSubmit}>선택 완료</Button>
-            <Button variant='light' onClick={onClickClear}>초기화</Button>
+            <Button className="mt-1" variant='success' onClick={onSubmit}>선택 완료</Button>
+            <Button className="mt-1" variant='light' onClick={onClickClear}>초기화</Button>
         </Form>
 
 
