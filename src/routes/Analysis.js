@@ -50,21 +50,14 @@ const Analysis = () => {
 
     const isCategoryCorrect = (element) => {
         if (firstCategory !== '' && firstCategory !== element.category_first) {
-            console.log(firstCategory);
-            console.log(element.category_first);
             return false;
         }
         if (secondCategory !== '' && secondCategory !== element.category_second) {
-            console.log(secondCategory);
-            console.log(element.category_second);
             return false;
         }
         if (thirdCategory !== '' && thirdCategory !== element.category_third) {
-            console.log(secondCategory);
-            console.log(element.category_second);
             return false;
         }
-        console.log(true);
         return true;
     }
 

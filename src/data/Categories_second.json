@@ -12,7 +12,7 @@
 {"id":12,"name":"숙채류","parent":"완제품","parent_id":1},
 {"id":13,"name":"아이스크림류","parent":"완제품","parent_id":1},
 {"id":14,"name":"음료류","parent":"완제품","parent_id":1},
-{"id":15,"name":"장아찌 및 절임류 ","parent":"완제품","parent_id":1},
+{"id":15,"name":"장아찌 및 절임류","parent":"완제품","parent_id":1},
 {"id":16,"name":"전.적 및 부침류","parent":"완제품","parent_id":1},
 {"id":17,"name":"젓갈류","parent":"완제품","parent_id":1},
 {"id":18,"name":"조림류","parent":"완제품","parent_id":1},
