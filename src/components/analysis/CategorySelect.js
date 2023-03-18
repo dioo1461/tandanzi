@@ -1,19 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Container, Form, Row, Button } from "react-bootstrap";
-import categoryData from 'data/Categories.json';
+import firstCategoryData from 'data/Categories_first.json';
+import secondCategoryData from 'data/Categories_second.json';
+import thirdCategoryData from 'data/Categories_third.json';
 
 const CategorySelect = ({ getCategories }) => {
     const [first, setFirst] = useState('');
     const [second, setSecond] = useState('');
     const [third, setThird] = useState('');
 
-    const firstCategoryList = categoryData.map(firstFilter);
-    const secondCategoryList = ['구이류', '국 및 탕류', '볶음류', '튀김류', '찜류', '면류'];
-    const thirdCategoryList = ['1', '2', '3'];
+    const firstCategoryList = firstCategoryData.map(e=>{return e.name;})
+    const [secondCategoryList, setSecondCategoryList] = useState([]);
+    const [thirdCategoryList, setThirdCategoryList] = useState([]);
 
-    const firstFilter = (element) => {
-        
-    }
+    useEffect(() => {
+        setSecondCategoryList(secondCategoryData.filter(e=>{return e.parent === first}));
+    }, [first])
+
+    useEffect(()=>{
+        setThirdCategoryList(thirdCategoryData.filter(e=>{return e.parent === second}));
+    }, [second])
 
     const onFirstSelectChange = (e) => {
         setFirst(e.target.value);
@@ -56,7 +62,7 @@ const CategorySelect = ({ getCategories }) => {
                     <option value=''>전체</option>
                     {secondCategoryList.map((element, index) => {
                         return (
-                            <option key={`${element}-${index}`} value={element}>{element}</option>
+                            <option key={`${element.name}-${index}`} value={element.name}>{element.name}</option>
                         )
                     })}
                 </Form.Select>}
@@ -65,7 +71,7 @@ const CategorySelect = ({ getCategories }) => {
                     <option value=''>전체</option>
                     {thirdCategoryList.map((element, index) => {
                         return (
-                            <option key={`${element}-${index}`} value={element}>{element}</option>
+                            <option key={`${element.name}-${index}`} value={element.name}>{element.name}</option>
                         )
                     })}
                 </Form.Select>}

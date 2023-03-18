@@ -1,6 +1,5 @@
 import { useState, useEffect, } from 'react';
 import foodData from 'data/Foods.json';
-import categoryData from 'data/Categories.json';
 import FoodDisplay from 'components/analysis/FoodDisplay';
 import FoodSelectModal from 'components/analysis/FoodSelectModal';
 import SelectedFoodDisplay from 'components/analysis/SelectedFoodDisplay';
@@ -93,8 +92,10 @@ const Analysis = () => {
     }
     const getCurrentFoodFromModal = (num, isGram, calories) => {
         if (num <= 0) {
-            return;
+        console.log('');
+        return;
         }
+        console.log('ok');
         let isDuplicateExists = false;
         let idx = 0;
         (function findDuplicates() {
@@ -161,7 +162,6 @@ const Analysis = () => {
     return (
         <div>
             <Container fluid>
-
                 <Form.Check>
                     <Form.Check.Input id='FormCheck' type='checkbox' onChange={onCheckboxClick} />
                     <Form.Check.Label htmlFor='FormCheck'>카테고리 선택</Form.Check.Label>
@@ -187,7 +187,7 @@ const Analysis = () => {
                         currentFood={currentFood}
                         isModalEnabled={isModalEnabled}
                         getModalExit={getModalExit}
-                         l={getCurrentFoodFromModal}
+                        getCurrentFoodFromModal={getCurrentFoodFromModal}
                     />}
                 <br />
                 {/*선택한 음식들을 나열, 칼로리를 계산 */}
