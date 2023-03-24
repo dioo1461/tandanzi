@@ -1,8 +1,12 @@
-const { Container, Row, Form, Button } = require("react-bootstrap")
+import axios from "axios";
+import { Container, Row, Form, Button } from 'react-bootstrap';
 
 
 const Auth = () => {
 
+    const userLogin = (email, password) => {
+        axios.get();
+    }
 
     return (
         <Container className='justify-content-center'>

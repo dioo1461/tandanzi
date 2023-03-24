@@ -13,7 +13,7 @@ const SelectedFoodDisplay = ({ currentFood, getEditEnter, getDeleteEnter }) => {
         <>
             <div>
                 {`${currentFood.food.name}, 
-                ${currentFood.num}${currentFood.isGram ? currentFood.food.unit_name : ' unit'}`}
+                ${currentFood.num}${currentFood.isGram ? currentFood.food.unit_name : '인분'}`}
                 {!currentFood.isGram && `(${currentFood.food.gram_per_unit * currentFood.num}${currentFood.food.unit_name})`}
                 <Button variant='light' onClick={onClickEdit}>편집</Button>
                 <Button variant='light' onClick={onClickDelete}>삭제</Button>

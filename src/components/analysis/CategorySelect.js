@@ -57,7 +57,7 @@ const CategorySelect = ({ getCategories }) => {
                     )
                 })}
             </Form.Select>
-            {first === '' ? null :
+            {(first === '' || secondCategoryList.length === 0) ? null :
                 <Form.Select className="mb-1" value={second} onChange={onSecondSelectChange}>
                     <option value=''>전체</option>
                     {secondCategoryList.map((element, index) => {
@@ -66,7 +66,7 @@ const CategorySelect = ({ getCategories }) => {
                         )
                     })}
                 </Form.Select>}
-            {second === '' ? null :
+            {(second === '' || thirdCategoryList.length === 0) ? null :
                 <Form.Select className="mb-1" value={third} onChange={onThirdSelectChange}>
                     <option value=''>전체</option>
                     {thirdCategoryList.map((element, index) => {

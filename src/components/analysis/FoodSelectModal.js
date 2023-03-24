@@ -52,7 +52,7 @@ const FoodSelectModal = ({ currentFood, isModalEnabled, getModalExit, getCurrent
                 <br /> <br/>
                 <Form onSubmit={onSubmit}>
                     <input type='number' value={displayNum} onChange={onChange} />
-                    {` ${isGram ? currentFood.food.unit_name : 'unit'}`}
+                    {` ${isGram ? currentFood.food.unit_name : '인분'}`}
                     <br/>
                     <Button variant='light' onClick={toggleUnit}>단위 변경</Button>   
                     <br />
