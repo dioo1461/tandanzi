@@ -5,8 +5,9 @@ import Profile from 'routes/Profile';
 import Journal from 'routes/Journal';
 import Analysis from 'routes/Analysis';
 import Foodpedia from 'routes/Foodpedia';
-import Auth from 'routes/Auth';
+import Auth, { logout } from 'routes/Auth/Auth';
 import Header from 'layout/header/Header';
+import { Button } from 'react-bootstrap';
 const AppRouter = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     return (
@@ -20,8 +21,10 @@ const AppRouter = () => {
                         <Route exact path='/user/journal' element={<Journal />} />
                     </>
                 ) : (
-                    <Route path='/user' element={<Auth />} />
-                    )}
+                    <>
+                        <Route path='/auth' element={<Auth />} />
+                    </>
+                )}
                 <Route exact path='/analysis' element={<Analysis />} />
                 <Route exact path='/foodpedia' element={<Foodpedia />} />
             </Routes>

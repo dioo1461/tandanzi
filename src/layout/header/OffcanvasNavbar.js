@@ -1,8 +1,13 @@
 import { Button, Container, Form, Nav, Navbar, NavDropdown, Offcanvas } from "react-bootstrap";
+import { logout } from "routes/Auth/Auth";
+import { useLinkClickHandler, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 
 const OffcanvasNavbar = () => {
+  const location = useLocation();
     const expand = 'md';
+
     return(
         <Navbar bg="light" expand={expand} className="mb-3">
           <Container fluid>
@@ -19,7 +24,11 @@ const OffcanvasNavbar = () => {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Nav.Link href="/user">로그인 / 내 프로필</Nav.Link>
+                  {localStorage.getItem('token') ?
+                  <Nav.Link onClick={logout}>로그아웃</Nav.Link>
+                  :
+                  <Nav.Link href='auth'>로그인</Nav.Link>
+                  }
                   <Nav.Link href="/analysis">칼로리 분석</Nav.Link>
                   <Nav.Link href="/">칼로리 사전</Nav.Link>
                   <Nav.Link href="/">식사 일지</Nav.Link>
