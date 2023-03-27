@@ -8,6 +8,7 @@ import Foodpedia from 'routes/Foodpedia';
 import Auth, { logout } from 'routes/Auth/Auth';
 import Header from 'layout/header/Header';
 import { Button } from 'react-bootstrap';
+import SignUp from 'routes/Auth/SignUp';
 const AppRouter = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     return (
@@ -23,6 +24,7 @@ const AppRouter = () => {
                 ) : (
                     <>
                         <Route path='/auth' element={<Auth />} />
+                        <Route path='/auth/sign-up' element={<SignUp />} />
                     </>
                 )}
                 <Route exact path='/analysis' element={<Analysis />} />
