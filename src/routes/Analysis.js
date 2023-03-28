@@ -85,10 +85,8 @@ const Analysis = () => {
     }
     const getCurrentFoodFromModal = (num, isGram, calories) => {
         if (num <= 0) {
-        console.log('');
-        return;
+            return;
         }
-        console.log('ok');
         let isDuplicateExists = false;
         let idx = 0;
         (function findDuplicates() {
@@ -155,6 +153,7 @@ const Analysis = () => {
     return (
         <div>
             <Container fluid>
+
                 <Form.Check>
                     <Form.Check.Input id='FormCheck' type='checkbox' onChange={onCheckboxClick} />
                     <Form.Check.Label htmlFor='FormCheck'>카테고리 선택</Form.Check.Label>
@@ -180,7 +179,7 @@ const Analysis = () => {
                         currentFood={currentFood}
                         isModalEnabled={isModalEnabled}
                         getModalExit={getModalExit}
-                        getCurrentFoodFromModal={getCurrentFoodFromModal}
+                        getCurentFoodFromModal={getCurrentFoodFromModal}
                     />}
                 <br />
                 {/*선택한 음식들을 나열, 칼로리를 계산 */}
