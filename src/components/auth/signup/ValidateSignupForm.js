@@ -37,21 +37,33 @@ export const ValidatePasswordForm = (password, passwordConfirmation) => {
         if (!(/[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password[i]))) {
             val = false;
             break;
-        }
+        } // ### sql injection 취약점 ###
     }
     if (!val) {
         return PASS_ERROR_TYPE.unpermitted_word;
     }
 
-    val = false;
+    let special, eng, num = false;
     for (let i = 0; i < password.length; i++) {
         if (/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>\/?~]/.test(password[i])) {
-            val = true;
+            special = true;
             break;
         }
     }
-    if (!val) {
-        return PASS_ERROR_TYPE.non_special;
+    for (let i = 0; i < password.length; i++) {
+        if (/[a-zA-Z]/.test(password[i])) {
+            eng = true;
+            break;
+        }
+    }
+    for (let i = 0; i < password.length; i++) {
+        if (/[0-9]/.test(password[i])) {
+            num = true;
+            break;
+        }
+    }
+    if (!special || !eng || !num) {
+        return PASS_ERROR_TYPE.non_mixed;
     }
 
     if (password != passwordConfirmation) {

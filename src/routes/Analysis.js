@@ -83,6 +83,7 @@ const Analysis = () => {
     const getModalExit = () => {
         setIsModalEnabled(false);
     }
+    
     const getCurrentFoodFromModal = (num, isGram, calories) => {
         if (num <= 0) {
             return;
@@ -179,7 +180,7 @@ const Analysis = () => {
                         currentFood={currentFood}
                         isModalEnabled={isModalEnabled}
                         getModalExit={getModalExit}
-                        getCurentFoodFromModal={getCurrentFoodFromModal}
+                        getCurrentFoodFromModal={getCurrentFoodFromModal}
                     />}
                 <br />
                 {/*선택한 음식들을 나열, 칼로리를 계산 */}
