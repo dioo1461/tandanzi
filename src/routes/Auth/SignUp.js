@@ -4,6 +4,7 @@ import { UnwrittenBadge, ConfirmedBadge, ErrorBadge } from "components/auth/sign
 import { ValidateEmailForm, ValidatePasswordForm } from "components/auth/signup/ValidateSignupForm";
 import { SignupErrorTooltip, PasswordConfirmationUnmatchTooltip, PasswordNonmixedTooltip, PasswordShortLengthTooltip, PasswordUnpermittedWordTooltip } from "components/auth/signup/SignupErrorTooltip";
 import { isExternalModuleNameRelative } from "typescript";
+import { RequestEmailValidation } from "components/auth/signup/EmailValidator";
 
 export const EMAIL_ERROR_TYPE = {
     unwritten: 'unwritten',
@@ -106,13 +107,15 @@ const Signup = () => {
         }
     }, [passwordError])
 
-    const returnPassErrors = () => {
-        return (
-            PASS_ERROR_TYPE.short_length ||
-            PASS_ERROR_TYPE.unpermitted_word ||
-            PASS_ERROR_TYPE.non_mixed ||
-            PASS_ERROR_TYPE.confirmation_unmatch
-        )
+    const checkEmailUnique = async () => {
+        const val = await RequestEmailValidation(email);
+        setIsEmailUnique(val);
+        if (val) {
+            setIsEmailErrorTooltipEnabled(false);
+        } else {
+            setIsEmailErrorTooltipEnabled(true);
+            setEmailErrorText('중복된 이메일이 존재합니다.');
+        }
     }
 
     return (
@@ -123,22 +126,29 @@ const Signup = () => {
                         <Form.Label className='me-2' >이메일</Form.Label>
                         {emailError === EMAIL_ERROR_TYPE.unwritten && <UnwrittenBadge />}
                         {emailError === EMAIL_ERROR_TYPE.invalid_form && <ErrorBadge ref={emailBadgeRef} />}
-                        {emailError === EMAIL_ERROR_TYPE.confirmed && 
-                        <>
-                            <ConfirmedBadge />
-                            { isEmailUnique ? 
-                                <Button disabled className='ms-2' size='sm' variant='outline-primary'>확인 완료</Button>
-                                :
-                                <Button className='ms-2' size='sm' variant='outline-primary'>중복 확인</Button>
-                            }
-                        </>
+                        {emailError === EMAIL_ERROR_TYPE.confirmed &&
+                            <>
+                                <ConfirmedBadge />
+                                {isEmailUnique ?
+                                    <Button disabled className='ms-2' size='sm' variant='outline-primary'>확인 완료</Button>
+                                    :
+                                    <Button
+                                        className='ms-2'
+                                        size='sm'
+                                        variant='outline-primary'
+                                        ref={emailBadgeRef}
+                                        onClick={checkEmailUnique}>
+                                        중복 확인
+                                    </Button>
+                                }
+                            </>
                         }
                         <SignupErrorTooltip
                             target={emailBadgeRef}
                             show={isEmailErrorTooltipEnabled}
                             text={emailErrorText}
                         />
-                        { isEmailUnique ?
+                        {isEmailUnique ?
                             <Form.Control disabled type='email' value={email} onChange={handleEmailChange} placeholder='ex) abc@gmail.com' />
                             :
                             <Form.Control type='email' value={email} onChange={handleEmailChange} placeholder='ex) abc@gmail.com' />
