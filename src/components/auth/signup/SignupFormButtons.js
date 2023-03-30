@@ -1,21 +1,20 @@
 import { forwardRef } from "react"
 import { Button } from "react-bootstrap"
 
-export const DuplicationCheckedButton = () => {
-    return(
-        <Button disabled className='ms-2' size='sm' variant='outline-primary'>
-            확인 완료
+export const ReInputButton = ({ onClick }) => {
+    return (
+        <Button className='ms-2' size='sm' variant='outline-primary'
+            onClick={onClick}>
+            재입력
         </Button>
     )
 }
 
 export const CheckDuplicationButton = forwardRef((props, ref) => {
-    const {onClick, ...rest} = props;
+    const { onClick, ...rest } = props;
     return (
         <Button
-            className='ms-2'
-            size='sm'
-            variant='outline-primary'
+            className='ms-2' size='sm' variant='outline-primary'
             ref={ref}
             onClick={onClick}
             {...rest} >

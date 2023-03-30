@@ -5,7 +5,7 @@ import { ValidateEmailForm, ValidatePasswordForm, ValidateUsernameForm } from "c
 import { SignupErrorTooltip, PasswordConfirmationUnmatchTooltip, PasswordNonmixedTooltip, PasswordShortLengthTooltip, PasswordUnpermittedWordTooltip } from "components/auth/signup/SignupErrorTooltip";
 import { isExternalModuleNameRelative } from "typescript";
 import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "components/auth/signup/SignupAxiosRequests";
-import { CheckDuplicationButton, DuplicationCheckedButton } from "components/auth/signup/SignupFormButtons";
+import { CheckDuplicationButton, ReInputButton } from "components/auth/signup/SignupFormButtons";
 import { Navigate, useNavigate } from "react-router-dom";
 import { RequestLogin } from "components/auth/login/LoginAxiosRequest";
 
@@ -198,7 +198,7 @@ const Signup = () => {
                             <>
                                 <ConfirmedBadge />
                                 {isEmailUnique ?
-                                    <DuplicationCheckedButton />
+                                    <ReInputButton onClick={()=>setIsEmailUnique(false)}/>
                                     :
                                     <CheckDuplicationButton onClick={checkEmailUnique} />
                                 }
@@ -225,7 +225,7 @@ const Signup = () => {
                             <>
                                 <ConfirmedBadge />
                                 {isUsernameUnique ?
-                                    <DuplicationCheckedButton />
+                                    <ReInputButton onClick={()=>setIsUsernameUnique(false)}/>
                                     :
                                     <CheckDuplicationButton onClick={checkUsernameUnique} />
                                 }
@@ -270,7 +270,9 @@ const Signup = () => {
                         <Form.Control type='password' value={passwordConfirmation} onChange={handlePasswordConfirmationChange} placeholder='ex) abcd1234!' />
                     </Form.Group>
                 </Row>
-                {emailError===EMAIL_ERROR_TYPE.confirmed && isEmailUnique && passwordError === PASS_ERROR_TYPE.confirmed?
+                {emailError === EMAIL_ERROR_TYPE.confirmed && isEmailUnique 
+                && passwordError === PASS_ERROR_TYPE.confirmed
+                && usernameError === USERNAME_ERROR_TYPE.confirmed && isUsernameUnique ?
                     <Button variant='primary' type='submit' >회원가입</Button>
                     :
                     <Button variant='primary' type='submit' disabled>회원가입</Button>
