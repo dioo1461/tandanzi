@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react"
 import { Button, Container, Form, InputGroup, Row } from "react-bootstrap"
 import { UnwrittenBadge, ConfirmedBadge, ErrorBadge } from "components/auth/signup/SignupBadges";
-import { ValidateEmailForm, ValidatePasswordForm } from "components/auth/signup/ValidateSignupForm";
+import { ValidateEmailForm, ValidatePasswordForm, ValidateUsernameForm } from "components/auth/signup/ValidateSignupForm";
 import { SignupErrorTooltip, PasswordConfirmationUnmatchTooltip, PasswordNonmixedTooltip, PasswordShortLengthTooltip, PasswordUnpermittedWordTooltip } from "components/auth/signup/SignupErrorTooltip";
 import { isExternalModuleNameRelative } from "typescript";
-import { RequestEmailValidation } from "components/auth/signup/EmailValidator";
+import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "components/auth/signup/SignupAxiosRequests";
+import { CheckDuplicationButton, DuplicationCheckedButton } from "components/auth/signup/SignupFormButtons";
 
 export const EMAIL_ERROR_TYPE = {
     unwritten: 'unwritten',
@@ -17,29 +18,40 @@ export const PASS_ERROR_TYPE = {
     unwritten: 'unwritten',
     confirmed: 'confirmed',
     short_length: 'short_length', // 최소 6자
-    unpermitted_word: 'unpermitted_word', // 영어, 숫자, 특수문자만 가능
+    unpermitted_character: 'unpermitted_character', // 영어, 숫자, 특수문자만 가능
     non_mixed: 'non_mixed', // 특수문자 최소 1개 포함
     confirmation_unmatch: 'confirmation_unmatch', // 두 비밀번호가 일치하지 않음
+}
+
+export const USERNAME_ERROR_TYPE = {
+    unwritten: 'unwritten',
+    confirmed: 'confirmed',
+    existing_username: 'existing_username'
 }
 
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
-    const [nickName, setNickName] = useState('');
+    const [username, setUsername] = useState('');
 
     const [emailError, setEmailError] = useState(EMAIL_ERROR_TYPE.unwritten);
     const [passwordError, setPasswordError] = useState(PASS_ERROR_TYPE.unwritten);
+    const [usernameError, setUsernameError] = useState(USERNAME_ERROR_TYPE.unwritten);
 
     const [isEmailErrorTooltipEnabled, setIsEmailErrorTooltipEnabled] = useState(false);
     const [emailErrorText, setEmailErrorText] = useState('');
     const [isPasswordErrorTooltipEnabled, setIsPasswordErrorTooltipEnabled] = useState(false);
     const [passwordErrorText, setPasswordErrorText] = useState('');
+    const [isUsernameErrorTooltipEnabled, setIsUsernameErrorTooltipEnabled] = useState(false);
+    const [usernameErrorText, setUsernameErrorText] = useState('');
 
     const [isEmailUnique, setIsEmailUnique] = useState(false);
+    const [isUsernameUnique, setIsUsernameUnique] = useState(false);
 
     const emailBadgeRef = useRef(null);
     const passwordBadgeRef = useRef(null);
+    const usernameBadgeRef = useRef(null);
     //const emailBadgeRef = useRef(null);
 
 
@@ -62,10 +74,12 @@ const Signup = () => {
         setPasswordError(error);
     }
 
-    const handleSubmit = (e) => {
+    const handleUsernameChange = (e) => {
+        setUsername(e.target.value);
+        const error = ValidateUsernameForm(e.target.value);
+        setUsernameError(error);
 
     }
-
 
     useEffect(() => {
         switch (emailError) {
@@ -78,6 +92,8 @@ const Signup = () => {
                 setEmailErrorText('유효한 형식의 이메일을 입력해야 합니다.');
                 break;
             case EMAIL_ERROR_TYPE.existing_email:
+                setIsEmailErrorTooltipEnabled(true);
+                setEmailErrorText('중복된 이메일이 존재합니다.');
                 break;
         }
     }, [emailError])
@@ -92,7 +108,7 @@ const Signup = () => {
                 setIsPasswordErrorTooltipEnabled(true);
                 setPasswordErrorText('비밀번호는 최소 6자 이상이어야 합니다.');
                 break;
-            case PASS_ERROR_TYPE.unpermitted_word:
+            case PASS_ERROR_TYPE.unpermitted_character:
                 setIsPasswordErrorTooltipEnabled(true);
                 setPasswordErrorText('비밀번호는 영어, 숫자, 특수문자로 구성되어야 합니다.');
                 break;
@@ -107,15 +123,51 @@ const Signup = () => {
         }
     }, [passwordError])
 
-    const checkEmailUnique = async () => {
-        const val = await RequestEmailValidation(email);
-        setIsEmailUnique(val);
-        if (val) {
-            setIsEmailErrorTooltipEnabled(false);
-        } else {
-            setIsEmailErrorTooltipEnabled(true);
-            setEmailErrorText('중복된 이메일이 존재합니다.');
+    useEffect(() => {
+        switch (usernameError) {
+            case USERNAME_ERROR_TYPE.unwritten:
+            case USERNAME_ERROR_TYPE.confirmed:
+                setIsUsernameErrorTooltipEnabled(false);
+                break;
+            case USERNAME_ERROR_TYPE.existing_username:
+                setIsUsernameErrorTooltipEnabled(true);
+                setUsernameErrorText('중복된 닉네임이 존재합니다.');
+                break;
         }
+    }, [usernameError])
+
+    const checkEmailUnique = async () => {
+        await CheckEmailUnique(email)
+            .then(res => {
+                setIsEmailUnique(res);
+                if (res) {
+                    setEmailError(EMAIL_ERROR_TYPE.confirmed);
+                } else {
+                    setEmailError(EMAIL_ERROR_TYPE.existing_email);
+                }
+            });
+    }
+
+    const checkUsernameUnique = async () => {
+        await CheckUsernameUnique(username)
+            .then(res => {
+                setIsUsernameUnique(res);
+                if (res) {
+                    setUsernameError(USERNAME_ERROR_TYPE.confirmed);
+                } else {
+                    setUsernameError(USERNAME_ERROR_TYPE.existing_username);
+                }
+            });
+    }
+
+
+    const handleSubmit = () => {
+        const data = {
+            email:email,
+            password:password,
+            username:username
+        }
+        SubmitSignupForm(data);
     }
 
     return (
@@ -126,20 +178,14 @@ const Signup = () => {
                         <Form.Label className='me-2' >이메일</Form.Label>
                         {emailError === EMAIL_ERROR_TYPE.unwritten && <UnwrittenBadge />}
                         {emailError === EMAIL_ERROR_TYPE.invalid_form && <ErrorBadge ref={emailBadgeRef} />}
+                        {emailError === EMAIL_ERROR_TYPE.existing_email && <ErrorBadge ref={emailBadgeRef} />}
                         {emailError === EMAIL_ERROR_TYPE.confirmed &&
                             <>
                                 <ConfirmedBadge />
                                 {isEmailUnique ?
-                                    <Button disabled className='ms-2' size='sm' variant='outline-primary'>확인 완료</Button>
+                                    <DuplicationCheckedButton />
                                     :
-                                    <Button
-                                        className='ms-2'
-                                        size='sm'
-                                        variant='outline-primary'
-                                        ref={emailBadgeRef}
-                                        onClick={checkEmailUnique}>
-                                        중복 확인
-                                    </Button>
+                                    <CheckDuplicationButton onClick={checkEmailUnique} />
                                 }
                             </>
                         }
@@ -156,12 +202,39 @@ const Signup = () => {
                     </Form.Group>
                 </Row>
                 <Row>
+                    <Form.Group className="mb-3" controlId='formBasicEmail'>
+                        <Form.Label className='me-2' >닉네임</Form.Label>
+                        {usernameError === USERNAME_ERROR_TYPE.unwritten && <UnwrittenBadge />}
+                        {usernameError === USERNAME_ERROR_TYPE.existing_username && <ErrorBadge ref={usernameBadgeRef} />}
+                        {usernameError === USERNAME_ERROR_TYPE.confirmed &&
+                            <>
+                                <ConfirmedBadge />
+                                {isUsernameUnique ?
+                                    <DuplicationCheckedButton />
+                                    :
+                                    <CheckDuplicationButton onClick={checkUsernameUnique} />
+                                }
+                            </>
+                        }
+                        <SignupErrorTooltip
+                            target={usernameBadgeRef}
+                            show={isUsernameErrorTooltipEnabled}
+                            text={usernameErrorText}
+                        />
+                        {isUsernameUnique ?
+                            <Form.Control disabled value={username} placeholder='ex) nickname12' />
+                            :
+                            <Form.Control value={username} onChange={handleUsernameChange} placeholder='ex) nickname12' />
+                        }
+                    </Form.Group>
+                </Row>
+                <Row>
                     <Form.Group className="mb-3" >
                         <Form.Label className='me-2'>비밀번호</Form.Label>
                         {passwordError === PASS_ERROR_TYPE.unwritten && <UnwrittenBadge />}
                         {(
                             passwordError === PASS_ERROR_TYPE.short_length
-                            || passwordError === PASS_ERROR_TYPE.unpermitted_word
+                            || passwordError === PASS_ERROR_TYPE.unpermitted_character
                             || passwordError === PASS_ERROR_TYPE.non_mixed
                             || passwordError === PASS_ERROR_TYPE.confirmation_unmatch
                         )
@@ -182,7 +255,11 @@ const Signup = () => {
                         <Form.Control type='password' value={passwordConfirmation} onChange={handlePasswordConfirmationChange} placeholder='ex) abcd1234!' />
                     </Form.Group>
                 </Row>
-                <Button variant='primary' type='submit'>회원가입</Button>
+                {emailError===EMAIL_ERROR_TYPE.confirmed && isEmailUnique && passwordError === PASS_ERROR_TYPE.confirmed?
+                    <Button variant='primary' type='submit' >회원가입</Button>
+                    :
+                    <Button variant='primary' type='submit' disabled>회원가입</Button>
+                }
             </Form>
         </Container>
     )

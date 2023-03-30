@@ -1,4 +1,4 @@
-import { EMAIL_ERROR_TYPE, PASS_ERROR_TYPE } from "routes/auth/Signup";
+import { EMAIL_ERROR_TYPE, PASS_ERROR_TYPE, USERNAME_ERROR_TYPE } from "routes/auth/Signup";
 
 export const ValidateEmailForm = (email) => {
     if (email === '') {
@@ -71,4 +71,12 @@ export const ValidatePasswordForm = (password, passwordConfirmation) => {
     }
 
     return PASS_ERROR_TYPE.confirmed;
+}
+
+export const ValidateUsernameForm = (username) => {
+    if (username==='') {
+        return USERNAME_ERROR_TYPE.unwritten;
+    }
+
+    return USERNAME_ERROR_TYPE.confirmed;
 }
