@@ -7,7 +7,7 @@ import { isExternalModuleNameRelative } from "typescript";
 import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "components/auth/signup/SignupAxiosRequests";
 import { CheckDuplicationButton, ReInputButton } from "components/auth/signup/SignupFormButtons";
 import { Navigate, useNavigate } from "react-router-dom";
-import { RequestLogin } from "components/auth/login/LoginAxiosRequest";
+import { RequestLogin } from "components/auth/login/LoginAxiosRequests.js";
 
 export const EMAIL_ERROR_TYPE = {
     unwritten: 'unwritten',

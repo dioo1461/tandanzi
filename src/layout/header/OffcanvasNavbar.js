@@ -13,6 +13,7 @@ import { Button, Container, Form, Nav, Navbar, NavDropdown, Offcanvas } from "re
 import { logout } from "routes/auth/Login";
 import { useLinkClickHandler, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { CheckIsLoggedIn } from "components/auth/login/CheckIsLoggedIn";
 
 
 const OffcanvasNavbar = () => {
@@ -35,7 +36,7 @@ const OffcanvasNavbar = () => {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                  {localStorage.getItem('token') ?
+                  {CheckIsLoggedIn ?
                   <>
                     <Nav.Link onClick={logout}>로그아웃</Nav.Link>
                     <Nav.Link href='/user/profile'>내 프로필</Nav.Link>

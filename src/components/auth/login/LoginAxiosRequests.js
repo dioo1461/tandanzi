@@ -7,7 +7,7 @@ export const RequestLogin = async (data) => {
     return axios.post('/auth/login', data)
         .then(response => {
             // console.log('res: ', response);
-            localStorage.setItem('token', response.data.access_token);
+            localStorage.setItem('loginToken', response.data.access_token);
             return true;
             // console.log(localStorage.getItem('token'));
         })
