@@ -15,30 +15,36 @@ import Profile from 'routes/Profile';
 import Journal from 'routes/Journal';
 import Analysis from 'routes/Analysis';
 import Foodpedia from 'routes/Foodpedia';
-import Login, { logout } from 'routes/auth/Login';
+import Auth, { logout } from 'routes/auth/Auth';
 import Header from 'layout/header/Header';
 import { Button } from 'react-bootstrap';
 import Signup from 'routes/auth/Signup';
+import { CheckIsLoggedIn } from './auth/login/LoginJwtMethods';
+import MenuRecommendation from 'routes/MenuRecommendation';
 const AppRouter = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     return (
         <Router base='/'>
-            <Header/>
+            <Header />
             <Routes>
                 <Route path='/' element={<Home />} />
-                { isLoggedIn ? (
-                    <>
-                        <Route exact path='/user/profile' element={<Profile />} />
-                        <Route exact path='/user/journal' element={<Journal />} />
-                    </>
-                ) : (
-                    <>
-                        <Route path='/auth' element={<Login />} />
-                        <Route path='/auth/sign-up' element={<Signup />} />
-                    </>
-                )}
+                { CheckIsLoggedIn() ? 
+                <>
+                    <Route exact path='/user/profile' element={<Profile />} />
+                    <Route exact path='/user/journal' element={<Journal />} />
+                </> 
+                :
+                <>
+                    <Route exact path='/user/profile' element={<Auth />} />
+                    <Route exact path='/user/journal' element={<Auth />} />
+                </> 
+                }
+                <Route path='/auth' element={<Auth />} />
+                <Route path='/auth/sign-up' element={<Signup />} />
+
                 <Route exact path='/analysis' element={<Analysis />} />
                 <Route exact path='/foodpedia' element={<Foodpedia />} />
+                <Route exact path='/menu-recommendation' element={<MenuRecommendation/>} />
             </Routes>
         </Router>
     );

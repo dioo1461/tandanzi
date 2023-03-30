@@ -16,7 +16,7 @@ import { Container, Row, Form, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
 
-const Login = () => {
+const Auth = () => {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -68,9 +68,4 @@ const Login = () => {
     )
 }
 
-export default Login;
-
-export const logout = () => {
-    localStorage.removeItem('token');
-    window.location.reload();
-}
+export default Auth;

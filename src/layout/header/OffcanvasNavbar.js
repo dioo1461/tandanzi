@@ -10,10 +10,10 @@
 // |- 코드의 중복이 있습니다. Nav.Link를 여러 번 사용하는 부분이 있어 코드의 양이 많아집니다.
 // |- 로그아웃 기능이 구현되어 있지만, 로그인 기능은 단순히 href로 이동하는 방식으로 구현되어 있어 보안에 취약합니다.
 import { Button, Container, Form, Nav, Navbar, NavDropdown, Offcanvas } from "react-bootstrap";
-import { logout } from "routes/auth/Login";
 import { useLinkClickHandler, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { CheckIsLoggedIn } from "components/auth/login/CheckIsLoggedIn";
+import { CheckIsLoggedIn } from "components/auth/login/LoginJwtMethods";
+import { Logout } from "components/auth/Logout";
 
 
 const OffcanvasNavbar = () => {
@@ -36,9 +36,9 @@ const OffcanvasNavbar = () => {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                  {CheckIsLoggedIn ?
+                  { CheckIsLoggedIn() ?
                   <>
-                    <Nav.Link onClick={logout}>로그아웃</Nav.Link>
+                    <Nav.Link onClick={Logout}>로그아웃</Nav.Link>
                     <Nav.Link href='/user/profile'>내 프로필</Nav.Link>
                   </>
                   :
@@ -46,9 +46,9 @@ const OffcanvasNavbar = () => {
                   
                   }
                   <Nav.Link href="/analysis">칼로리 분석</Nav.Link>
-                  <Nav.Link href="/">칼로리 사전</Nav.Link>
-                  <Nav.Link href="/">식사 일지</Nav.Link>
-                  <Nav.Link href="/">메뉴 추천</Nav.Link>
+                  <Nav.Link href="/foodpedia">칼로리 사전</Nav.Link>
+                  <Nav.Link href="/user/journal">식사 일지</Nav.Link>
+                  <Nav.Link href="/menu-recommendation">메뉴 추천</Nav.Link>
                 </Nav>
               </Offcanvas.Body>
             </Navbar.Offcanvas>
