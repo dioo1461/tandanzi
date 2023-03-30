@@ -15,7 +15,7 @@ import Profile from 'routes/Profile';
 import Journal from 'routes/Journal';
 import Analysis from 'routes/Analysis';
 import Foodpedia from 'routes/Foodpedia';
-import Auth, { logout } from 'routes/auth/Auth';
+import Login, { logout } from 'routes/auth/Login';
 import Header from 'layout/header/Header';
 import { Button } from 'react-bootstrap';
 import Signup from 'routes/auth/Signup';
@@ -33,7 +33,7 @@ const AppRouter = () => {
                     </>
                 ) : (
                     <>
-                        <Route path='/auth' element={<Auth />} />
+                        <Route path='/auth' element={<Login />} />
                         <Route path='/auth/sign-up' element={<Signup />} />
                     </>
                 )}

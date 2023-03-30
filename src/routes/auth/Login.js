@@ -10,37 +10,34 @@
 // |- 로그아웃 기능이 별도의 파일로 분리되어 있지 않고, 같은 파일 내에서 export되고 있습니다. 이는 코드의 가독성을 떨어뜨릴 수 있습니다.
 // |- 로그인 실패 시, 실패 횟수를 카운트하는 기능이 있지만, 일정 횟수 이상 실패 시 계정이 잠기는 등의 추가적인 보안 기능이 구현되어 있지 않습니다.
 import axios from "axios";
+import { RequestLogin } from "components/auth/login/LoginAxiosRequest";
 import { useState } from "react";
 import { Container, Row, Form, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
 
-const Auth = () => {
+const Login = () => {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loginAttemptCount, setLogiAttemptCount] = useState(0);
+    const [loginAttemptCount, setLoginAttemptCount] = useState(0);
 
     const handleEmailChange = (e) => setEmail(e.target.value);
     const handlePasswordChange = (e) => setPassword(e.target.value);
     
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         const data = {email: email, password: password};
 
-
-        axios.post('/auth/login', data)
-          .then(response => {
-            // console.log('res: ', response);
-            localStorage.setItem('token', response.data.access_token);
+        const response = await RequestLogin(data);
+        console.log('Login, response: ', response);
+        if (response) {
             navigate('/');
-            // console.log(localStorage.getItem('token'));
-          })
-          .catch(error => { 
-            setLogiAttemptCount(prev => prev+1);
-           });
+        } else {
+            setLoginAttemptCount(prev=>prev+1);
+        }
     }
 
     return (
@@ -71,7 +68,7 @@ const Auth = () => {
     )
 }
 
-export default Auth;
+export default Login;
 
 export const logout = () => {
     localStorage.removeItem('token');

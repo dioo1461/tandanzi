@@ -10,7 +10,7 @@
 // |- 코드의 중복이 있습니다. Nav.Link를 여러 번 사용하는 부분이 있어 코드의 양이 많아집니다.
 // |- 로그아웃 기능이 구현되어 있지만, 로그인 기능은 단순히 href로 이동하는 방식으로 구현되어 있어 보안에 취약합니다.
 import { Button, Container, Form, Nav, Navbar, NavDropdown, Offcanvas } from "react-bootstrap";
-import { logout } from "routes/auth/Auth";
+import { logout } from "routes/auth/Login";
 import { useLinkClickHandler, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 

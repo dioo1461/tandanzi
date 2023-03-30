@@ -6,6 +6,8 @@ import { SignupErrorTooltip, PasswordConfirmationUnmatchTooltip, PasswordNonmixe
 import { isExternalModuleNameRelative } from "typescript";
 import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "components/auth/signup/SignupAxiosRequests";
 import { CheckDuplicationButton, DuplicationCheckedButton } from "components/auth/signup/SignupFormButtons";
+import { Navigate, useNavigate } from "react-router-dom";
+import { RequestLogin } from "components/auth/login/LoginAxiosRequest";
 
 export const EMAIL_ERROR_TYPE = {
     unwritten: 'unwritten',
@@ -30,6 +32,8 @@ export const USERNAME_ERROR_TYPE = {
 }
 
 const Signup = () => {
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -161,13 +165,24 @@ const Signup = () => {
     }
 
 
-    const handleSubmit = () => {
+    const handleSubmit = async(e) => {
+        e.preventDefault();
         const data = {
             email:email,
             password:password,
             username:username
         }
-        SubmitSignupForm(data);
+        const signupSuccess = await SubmitSignupForm(data);
+        if (signupSuccess) {
+            const {username, ...rest} = data;
+            const loginSuccess = await RequestLogin(rest);
+            console.log('loginSuccess:', loginSuccess);
+            if (loginSuccess) {
+                navigate('/');
+            } else {
+                navigate('/auth');
+            }
+        }
     }
 
     return (
