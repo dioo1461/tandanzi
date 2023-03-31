@@ -12,8 +12,8 @@
 import { Button, Container, Form, Nav, Navbar, NavDropdown, Offcanvas } from "react-bootstrap";
 import { useLinkClickHandler, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { CheckIsLoggedIn } from "components/auth/login/LoginJwtMethods";
-import { Logout } from "components/auth/Logout";
+import { CheckIsLoggedIn } from "api/auth/login/LoginJwtMethods";
+import { Logout } from "api/auth/Logout";
 
 
 const OffcanvasNavbar = () => {

@@ -25,13 +25,13 @@ export const CheckUsernameUnique = async (username) => {
 
 /**  */
 export const SubmitSignupForm = async (data) => {
-    return axios.post('/users', data)
+    return await axios.post('/users', data)
     .then(res => {
         console.log('then');
-        return Promise.resolve(true);
+        return true;
     })
     .catch(err => {
-        return Promise.reject(false);
+        return false;
     })
 }
 

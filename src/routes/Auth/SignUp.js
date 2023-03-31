@@ -4,10 +4,10 @@ import { UnwrittenBadge, ConfirmedBadge, ErrorBadge } from "components/auth/sign
 import { ValidateEmailForm, ValidatePasswordForm, ValidateUsernameForm } from "components/auth/signup/ValidateSignupForm";
 import { SignupErrorTooltip, PasswordConfirmationUnmatchTooltip, PasswordNonmixedTooltip, PasswordShortLengthTooltip, PasswordUnpermittedWordTooltip } from "components/auth/signup/SignupErrorTooltip";
 import { isExternalModuleNameRelative } from "typescript";
-import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "components/auth/signup/SignupAxiosRequests";
+import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "api/auth/signup/SignupAxiosRequests";
 import { CheckDuplicationButton, ReInputButton } from "components/auth/signup/SignupFormButtons";
 import { Navigate, useNavigate } from "react-router-dom";
-import { RequestLogin } from "components/auth/login/LoginAxiosRequests.js";
+import { RequestLogin } from "api/auth/login/LoginAxiosRequests.js";
 
 export const EMAIL_ERROR_TYPE = {
     unwritten: 'unwritten',
@@ -43,11 +43,11 @@ const Signup = () => {
     const [passwordError, setPasswordError] = useState(PASS_ERROR_TYPE.unwritten);
     const [usernameError, setUsernameError] = useState(USERNAME_ERROR_TYPE.unwritten);
 
-    const [isEmailErrorTooltipEnabled, setIsEmailErrorTooltipEnabled] = useState(false);
+    const [isEmailErrorEnabled, setIsEmailErrorEnabled] = useState(false);
     const [emailErrorText, setEmailErrorText] = useState('');
-    const [isPasswordErrorTooltipEnabled, setIsPasswordErrorTooltipEnabled] = useState(false);
+    const [isPasswordErrorEnabled, setIsPasswordErrorEnabled] = useState(false);
     const [passwordErrorText, setPasswordErrorText] = useState('');
-    const [isUsernameErrorTooltipEnabled, setIsUsernameErrorTooltipEnabled] = useState(false);
+    const [isUsernameErrorEnabled, setIsUsernameErrorEnabled] = useState(false);
     const [usernameErrorText, setUsernameErrorText] = useState('');
 
     const [isEmailUnique, setIsEmailUnique] = useState(false);
@@ -89,14 +89,14 @@ const Signup = () => {
         switch (emailError) {
             case EMAIL_ERROR_TYPE.unwritten:
             case EMAIL_ERROR_TYPE.confirmed:
-                setIsEmailErrorTooltipEnabled(false);
+                setIsEmailErrorEnabled(false);
                 break;
             case EMAIL_ERROR_TYPE.invalid_form:
-                setIsEmailErrorTooltipEnabled(true);
+                setIsEmailErrorEnabled(true);
                 setEmailErrorText('유효한 형식의 이메일을 입력해야 합니다.');
                 break;
             case EMAIL_ERROR_TYPE.existing_email:
-                setIsEmailErrorTooltipEnabled(true);
+                setIsEmailErrorEnabled(true);
                 setEmailErrorText('중복된 이메일이 존재합니다.');
                 break;
         }
@@ -106,22 +106,22 @@ const Signup = () => {
         switch (passwordError) {
             case PASS_ERROR_TYPE.unwritten:
             case PASS_ERROR_TYPE.confirmed:
-                setIsPasswordErrorTooltipEnabled(false);
+                setIsPasswordErrorEnabled(false);
                 break;
             case PASS_ERROR_TYPE.short_length:
-                setIsPasswordErrorTooltipEnabled(true);
+                setIsPasswordErrorEnabled(true);
                 setPasswordErrorText('비밀번호는 최소 6자 이상이어야 합니다.');
                 break;
             case PASS_ERROR_TYPE.unpermitted_character:
-                setIsPasswordErrorTooltipEnabled(true);
+                setIsPasswordErrorEnabled(true);
                 setPasswordErrorText('비밀번호는 영어, 숫자, 특수문자로 구성되어야 합니다.');
                 break;
             case PASS_ERROR_TYPE.non_mixed:
-                setIsPasswordErrorTooltipEnabled(true);
+                setIsPasswordErrorEnabled(true);
                 setPasswordErrorText('비밀번호에는 각각 최소 1개의 영어, 숫자, 특수문자가 포함되어야 합니다.');
                 break;
             case PASS_ERROR_TYPE.confirmation_unmatch:
-                setIsPasswordErrorTooltipEnabled(true);
+                setIsPasswordErrorEnabled(true);
                 setPasswordErrorText('두 비밀번호가 일치하지 않습니다.');
                 break;
         }
@@ -131,10 +131,10 @@ const Signup = () => {
         switch (usernameError) {
             case USERNAME_ERROR_TYPE.unwritten:
             case USERNAME_ERROR_TYPE.confirmed:
-                setIsUsernameErrorTooltipEnabled(false);
+                setIsUsernameErrorEnabled(false);
                 break;
             case USERNAME_ERROR_TYPE.existing_username:
-                setIsUsernameErrorTooltipEnabled(true);
+                setIsUsernameErrorEnabled(true);
                 setUsernameErrorText('중복된 닉네임이 존재합니다.');
                 break;
         }
@@ -206,7 +206,7 @@ const Signup = () => {
                         }
                         <SignupErrorTooltip
                             target={emailBadgeRef}
-                            show={isEmailErrorTooltipEnabled}
+                            show={isEmailErrorEnabled}
                             text={emailErrorText}
                         />
                         {isEmailUnique ?
@@ -233,7 +233,7 @@ const Signup = () => {
                         }
                         <SignupErrorTooltip
                             target={usernameBadgeRef}
-                            show={isUsernameErrorTooltipEnabled}
+                            show={isUsernameErrorEnabled}
                             text={usernameErrorText}
                         />
                         {isUsernameUnique ?
@@ -258,7 +258,7 @@ const Signup = () => {
                         {passwordError === PASS_ERROR_TYPE.confirmed && <ConfirmedBadge />}
                         <SignupErrorTooltip
                             target={passwordBadgeRef}
-                            show={isPasswordErrorTooltipEnabled}
+                            show={isPasswordErrorEnabled}
                             text={passwordErrorText}
                         />
                         <Form.Control type='password' value={password} onChange={handlePasswordChange} placeholder='ex) abcd1234!' />

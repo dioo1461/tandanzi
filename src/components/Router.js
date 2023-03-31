@@ -11,7 +11,7 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from 'routes/Home';
-import Profile from 'routes/Profile';
+import Profile from 'routes/profile/Profile';
 import Journal from 'routes/Journal';
 import Analysis from 'routes/Analysis';
 import Foodpedia from 'routes/Foodpedia';
@@ -19,7 +19,7 @@ import Auth, { logout } from 'routes/auth/Auth';
 import Header from 'layout/header/Header';
 import { Button } from 'react-bootstrap';
 import Signup from 'routes/auth/Signup';
-import { CheckIsLoggedIn } from './auth/login/LoginJwtMethods';
+import { CheckIsLoggedIn } from 'api/auth/login/LoginJwtMethods';
 import MenuRecommendation from 'routes/MenuRecommendation';
 const AppRouter = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);

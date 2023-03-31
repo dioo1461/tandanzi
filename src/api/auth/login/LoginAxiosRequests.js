@@ -13,6 +13,6 @@ export const RequestLogin = async (data) => {
             // console.log(localStorage.getItem('token'));
         })
         .catch(error => {
-            return false;
+            return error;
         });
 }
