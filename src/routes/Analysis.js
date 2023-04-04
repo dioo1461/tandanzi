@@ -3,7 +3,7 @@ import foodData from 'data/Foods.json';
 import FoodDisplay from 'components/analysis/FoodDisplay';
 import FoodSelectModal from 'components/analysis/FoodSelectModal';
 import SelectedFoodDisplay from 'components/analysis/SelectedFoodDisplay';
-import { Form, Button, Container, InputGroup, Collapse } from 'react-bootstrap';
+import { Form, Button, Container, InputGroup, Collapse, Row, Col } from 'react-bootstrap';
 import CategorySelect from 'components/analysis/CategorySelect';
 
 const Analysis = () => {
@@ -83,7 +83,7 @@ const Analysis = () => {
     const getModalExit = () => {
         setIsModalEnabled(false);
     }
-    
+
     const getCurrentFoodFromModal = (num, isGram, calories) => {
         if (num <= 0) {
             return;
@@ -154,24 +154,26 @@ const Analysis = () => {
     return (
         <div>
             <Container fluid>
-
-                <Form.Check>
-                    <Form.Check.Input id='FormCheck' type='checkbox' onChange={onCheckboxClick} />
-                    <Form.Check.Label htmlFor='FormCheck'>카테고리 선택</Form.Check.Label>
-                </Form.Check>
-                <Collapse in={isCategoryOpened}>
-                    <div>
-                        <CategorySelect getCategories={getCategories}/>
-                    </div>
-                </Collapse>
-
-                <Form>
-                    <Form.Label>음식 이름을 입력하세요</Form.Label>
-                    <InputGroup>
-                        <Form.Control type='text' onChange={searchOnChange} value={currentSearching} />
-                        <Button variant='outline-secondary' onClick={() => setCurrentSearching('')}>clear</Button>
-                    </InputGroup>
-                </Form>
+                <Row sm={3}>
+                    <Col sm={{span:10, offset:1}} md={{span:8, offset:2}}>
+                        <Form.Check>
+                            <Form.Check.Input id='FormCheck' type='checkbox' onChange={onCheckboxClick} />
+                            <Form.Check.Label htmlFor='FormCheck'>카테고리 선택</Form.Check.Label>
+                        </Form.Check>
+                        <Collapse in={isCategoryOpened}>
+                            <div>
+                                <CategorySelect getCategories={getCategories} />
+                            </div>
+                        </Collapse>
+                        <Form>
+                            <Form.Label>음식 이름을 입력하세요</Form.Label>
+                            <InputGroup>
+                                <Form.Control type='text' onChange={searchOnChange} value={currentSearching} />
+                                <Button variant='outline-secondary' onClick={() => setCurrentSearching('')}>clear</Button>
+                            </InputGroup>
+                        </Form>
+                    </Col>
+                </Row>
             </Container>
             <div>
 

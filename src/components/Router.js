@@ -15,12 +15,12 @@ import Profile from 'routes/profile/Profile';
 import Journal from 'routes/Journal';
 import Analysis from 'routes/Analysis';
 import Foodpedia from 'routes/Foodpedia';
-import Auth, { logout } from 'routes/auth/Auth';
+import Auth from 'routes/auth/Auth';
 import Header from 'layout/header/Header';
-import { Button } from 'react-bootstrap';
 import Signup from 'routes/auth/Signup';
-import { CheckIsLoggedIn } from 'api/auth/login/LoginJwtMethods';
+import { checkIsAccessTokenAvailable } from 'utils/accessTokenMethods';
 import MenuRecommendation from 'routes/MenuRecommendation';
+import Community from 'routes/community/Community';
 const AppRouter = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     return (
@@ -28,7 +28,7 @@ const AppRouter = () => {
             <Header />
             <Routes>
                 <Route path='/' element={<Home />} />
-                { CheckIsLoggedIn() ? 
+                { checkIsAccessTokenAvailable() ? 
                 <>
                     <Route exact path='/user/profile' element={<Profile />} />
                     <Route exact path='/user/journal' element={<Journal />} />
@@ -45,6 +45,7 @@ const AppRouter = () => {
                 <Route exact path='/analysis' element={<Analysis />} />
                 <Route exact path='/foodpedia' element={<Foodpedia />} />
                 <Route exact path='/menu-recommendation' element={<MenuRecommendation/>} />
+                <Route exact path='/community' element={<Community/>} />
             </Routes>
         </Router>
     );

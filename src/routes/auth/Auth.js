@@ -9,10 +9,9 @@
 // |나쁜 점:
 // |- 로그아웃 기능이 별도의 파일로 분리되어 있지 않고, 같은 파일 내에서 export되고 있습니다. 이는 코드의 가독성을 떨어뜨릴 수 있습니다.
 // |- 로그인 실패 시, 실패 횟수를 카운트하는 기능이 있지만, 일정 횟수 이상 실패 시 계정이 잠기는 등의 추가적인 보안 기능이 구현되어 있지 않습니다.
-import axios from "axios";
-import { RequestLogin } from "api/auth/login/LoginAxiosRequests.js";
+import { requestLogin } from 'api/auth/login/loginAxiosRequests';
 import { useState } from "react";
-import { Container, Row, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Form, Button, Alert, Col } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
 
 
@@ -31,7 +30,7 @@ const Auth = () => {
         e.preventDefault();
         const data = {email: email, password: password};
 
-        const response = await RequestLogin(data);
+        const response = await requestLogin(data);
         console.log('Login, response: ', response);
         if (response) {
             navigate('/');
@@ -41,8 +40,10 @@ const Auth = () => {
     }
 
     return (
-        <Container className='justify-content-center'>
+        <Container className='justify-content-center' fluid>
             {/* {console.log(localStorage.getItem('token'))} */}
+            <Row className='mt-5'>
+                <Col xs={{span:10, offset:1}} md={{span:8, offset:2}} lg={{span:6, offset:3}}>
                 <Form  onSubmit={handleSubmit}>
                     <Row>
                         <Form.Group className="mb-3" controlId='formBasicEmail'>
@@ -64,6 +65,8 @@ const Auth = () => {
                     :
                     null
                 }
+                </Col>
+                </Row>
         </Container>
     )
 }

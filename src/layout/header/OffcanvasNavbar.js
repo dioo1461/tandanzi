@@ -12,8 +12,8 @@
 import { Button, Container, Form, Nav, Navbar, NavDropdown, Offcanvas } from "react-bootstrap";
 import { useLinkClickHandler, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { CheckIsLoggedIn } from "api/auth/login/LoginJwtMethods";
-import { Logout } from "api/auth/Logout";
+import { checkIsAccessTokenAvailable } from "utils/accessTokenMethods";
+import { logout } from "utils/logout";
 
 
 const OffcanvasNavbar = () => {
@@ -36,9 +36,9 @@ const OffcanvasNavbar = () => {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                  { CheckIsLoggedIn() ?
+                  { checkIsAccessTokenAvailable() ?
                   <>
-                    <Nav.Link onClick={Logout}>로그아웃</Nav.Link>
+                    <Nav.Link onClick={logout}>로그아웃</Nav.Link>
                     <Nav.Link href='/user/profile'>내 프로필</Nav.Link>
                   </>
                   :

@@ -31,7 +31,7 @@ export const SubmitSignupForm = async (data) => {
         return true;
     })
     .catch(err => {
-        return false;
+        return err;
     })
 }
 

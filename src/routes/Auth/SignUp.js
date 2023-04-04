@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react"
-import { Button, Container, Form, InputGroup, Row } from "react-bootstrap"
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap"
 import { UnwrittenBadge, ConfirmedBadge, ErrorBadge } from "components/auth/signup/SignupBadges";
 import { ValidateEmailForm, ValidatePasswordForm, ValidateUsernameForm } from "components/auth/signup/ValidateSignupForm";
 import { SignupErrorTooltip, PasswordConfirmationUnmatchTooltip, PasswordNonmixedTooltip, PasswordShortLengthTooltip, PasswordUnpermittedWordTooltip } from "components/auth/signup/SignupErrorTooltip";
 import { isExternalModuleNameRelative } from "typescript";
-import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "api/auth/signup/SignupAxiosRequests";
+import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "api/auth/signup/signupAxiosRequests";
 import { CheckDuplicationButton, ReInputButton } from "components/auth/signup/SignupFormButtons";
-import { Navigate, useNavigate } from "react-router-dom";
-import { RequestLogin } from "api/auth/login/LoginAxiosRequests.js";
+import { useNavigate } from "react-router-dom";
+import { requestLogin } from "api/auth/login/loginAxiosRequests.js";
 
 export const EMAIL_ERROR_TYPE = {
     unwritten: 'unwritten',
@@ -165,17 +165,17 @@ const Signup = () => {
     }
 
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
-            email:email,
-            password:password,
-            username:username
+            email: email,
+            password: password,
+            username: username
         }
         const signupSuccess = await SubmitSignupForm(data);
         if (signupSuccess) {
-            const {username, ...rest} = data;
-            const loginSuccess = await RequestLogin(rest);
+            const { username, ...rest } = data;
+            const loginSuccess = await requestLogin(rest);
             console.log('loginSuccess:', loginSuccess);
             if (loginSuccess) {
                 navigate('/');
@@ -186,9 +186,11 @@ const Signup = () => {
     }
 
     return (
-        <Container className='justify-content-center'>
-            <Form onSubmit={handleSubmit}>
-                <Row>
+        <Container className='justify-content-center' fluid>
+            <Row>
+                <Col xs={{span:10, offset:1}} md={{span:8, offset:2}} lg={{span:6, offset:3}}>
+                <Form onSubmit={handleSubmit}>
+
                     <Form.Group className="mb-3" controlId='formBasicEmail'>
                         <Form.Label className='me-2' >이메일</Form.Label>
                         {emailError === EMAIL_ERROR_TYPE.unwritten && <UnwrittenBadge />}
@@ -198,7 +200,7 @@ const Signup = () => {
                             <>
                                 <ConfirmedBadge />
                                 {isEmailUnique ?
-                                    <ReInputButton onClick={()=>setIsEmailUnique(false)}/>
+                                    <ReInputButton onClick={() => setIsEmailUnique(false)} />
                                     :
                                     <CheckDuplicationButton onClick={checkEmailUnique} />
                                 }
@@ -215,8 +217,6 @@ const Signup = () => {
                             <Form.Control type='email' value={email} onChange={handleEmailChange} placeholder='ex) abc@gmail.com' />
                         }
                     </Form.Group>
-                </Row>
-                <Row>
                     <Form.Group className="mb-3" controlId='formBasicEmail'>
                         <Form.Label className='me-2' >닉네임</Form.Label>
                         {usernameError === USERNAME_ERROR_TYPE.unwritten && <UnwrittenBadge />}
@@ -225,7 +225,7 @@ const Signup = () => {
                             <>
                                 <ConfirmedBadge />
                                 {isUsernameUnique ?
-                                    <ReInputButton onClick={()=>setIsUsernameUnique(false)}/>
+                                    <ReInputButton onClick={() => setIsUsernameUnique(false)} />
                                     :
                                     <CheckDuplicationButton onClick={checkUsernameUnique} />
                                 }
@@ -242,8 +242,6 @@ const Signup = () => {
                             <Form.Control value={username} onChange={handleUsernameChange} placeholder='ex) nickname12' />
                         }
                     </Form.Group>
-                </Row>
-                <Row>
                     <Form.Group className="mb-3" >
                         <Form.Label className='me-2'>비밀번호</Form.Label>
                         {passwordError === PASS_ERROR_TYPE.unwritten && <UnwrittenBadge />}
@@ -263,21 +261,20 @@ const Signup = () => {
                         />
                         <Form.Control type='password' value={password} onChange={handlePasswordChange} placeholder='ex) abcd1234!' />
                     </Form.Group>
-                </Row>
-                <Row>
                     <Form.Group className='mb-3'>
                         <Form.Label className='me-2'>비밀번호 확인</Form.Label>
                         <Form.Control type='password' value={passwordConfirmation} onChange={handlePasswordConfirmationChange} placeholder='ex) abcd1234!' />
                     </Form.Group>
-                </Row>
-                {emailError === EMAIL_ERROR_TYPE.confirmed && isEmailUnique 
-                && passwordError === PASS_ERROR_TYPE.confirmed
-                && usernameError === USERNAME_ERROR_TYPE.confirmed && isUsernameUnique ?
-                    <Button variant='primary' type='submit' >회원가입</Button>
-                    :
-                    <Button variant='primary' type='submit' disabled>회원가입</Button>
-                }
-            </Form>
+                    {emailError === EMAIL_ERROR_TYPE.confirmed && isEmailUnique
+                        && passwordError === PASS_ERROR_TYPE.confirmed
+                        && usernameError === USERNAME_ERROR_TYPE.confirmed && isUsernameUnique ?
+                        <Button variant='primary' type='submit' >회원가입</Button>
+                        :
+                        <Button variant='primary' type='submit' disabled>회원가입</Button>
+                    }
+                </Form>
+                </Col>
+            </Row>
         </Container>
     )
 }
