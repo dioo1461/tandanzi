@@ -26,11 +26,11 @@ const Profile = () => {
                     ----------------
                 </Col>
                 <Col md={5}>
-                    <Row>
-                        닉네임  {username}
+                    <Row className='mb-4'>
+                        닉네임 :  {username}
                     </Row>
-                    <Row>
-                        이메일  {email}
+                    <Row className='mb-4'>
+                        이메일 :  {email}
                     </Row>
                 </Col>
             </Row>
