@@ -12,7 +12,7 @@ const Profile = () => {
 
 
     const getUserInfos = () => {
-
+        
         
     }
 
@@ -27,10 +27,10 @@ const Profile = () => {
                 </Col>
                 <Col md={5}>
                     <Row className='mb-4'>
-                        닉네임 :  {username}
+                        닉네임 : {username}
                     </Row>
                     <Row className='mb-4'>
-                        이메일 :  {email}
+                        이메일 : {email}
                     </Row>
                 </Col>
             </Row>
