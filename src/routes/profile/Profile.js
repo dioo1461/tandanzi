@@ -1,4 +1,5 @@
-import { useState, } from 'react';
+import { getUserInstance } from 'api/users/userAxiosRequests';
+import { useEffect, useState, } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 
 const Profile = () => {
@@ -15,6 +16,11 @@ const Profile = () => {
         
         
     }
+    
+    useEffect(() => {
+        getUserInstance()
+
+    }, [])
 
     return (
         <Container>

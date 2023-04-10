@@ -9,7 +9,7 @@
 // |나쁜 점:
 // |- 로그아웃 기능이 별도의 파일로 분리되어 있지 않고, 같은 파일 내에서 export되고 있습니다. 이는 코드의 가독성을 떨어뜨릴 수 있습니다.
 // |- 로그인 실패 시, 실패 횟수를 카운트하는 기능이 있지만, 일정 횟수 이상 실패 시 계정이 잠기는 등의 추가적인 보안 기능이 구현되어 있지 않습니다.
-import { requestLogin } from 'api/auth/login/loginAxiosRequests';
+import { requestLogin } from 'api/auth/loginAxiosRequests';
 import { useState } from "react";
 import { Container, Row, Form, Button, Alert, Col } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";

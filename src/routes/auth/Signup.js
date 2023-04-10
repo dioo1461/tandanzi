@@ -4,10 +4,10 @@ import { UnwrittenBadge, ConfirmedBadge, ErrorBadge } from "components/auth/sign
 import { ValidateEmailForm, ValidatePasswordForm, ValidateUsernameForm } from "components/auth/signup/ValidateSignupForm";
 import { SignupErrorTooltip, PasswordConfirmationUnmatchTooltip, PasswordNonmixedTooltip, PasswordShortLengthTooltip, PasswordUnpermittedWordTooltip } from "components/auth/signup/SignupErrorTooltip";
 import { isExternalModuleNameRelative } from "typescript";
-import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "api/auth/signup/signupAxiosRequests";
+import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "api/auth/signupAxiosRequests";
 import { CheckDuplicationButton, ReInputButton } from "components/auth/signup/SignupFormButtons";
 import { useNavigate } from "react-router-dom";
-import { requestLogin } from "api/auth/login/loginAxiosRequests.js";
+import { requestLogin } from "api/auth/loginAxiosRequests.js";
 
 export const EMAIL_ERROR_TYPE = {
     unwritten: 'unwritten',
