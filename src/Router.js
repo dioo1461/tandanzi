@@ -21,6 +21,7 @@ import Signup from 'routes/auth/Signup';
 import { checkIsAccessTokenAvailable } from 'utils/accessTokenMethods';
 import MenuRecommendation from 'routes/MenuRecommendation';
 import Community from 'routes/community/Community';
+import ProfileEdit from 'routes/profile/ProfileEdit';
 const AppRouter = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     return (
@@ -31,6 +32,7 @@ const AppRouter = () => {
                 { checkIsAccessTokenAvailable() ? 
                 <>
                     <Route exact path='/user/profile' element={<Profile />} />
+                    <Route exact path='/user/profile/edit' element={<ProfileEdit />} />
                     <Route exact path='/user/journal' element={<Journal />} />
                 </> 
                 :

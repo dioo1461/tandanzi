@@ -178,7 +178,7 @@ const Signup = () => {
             const loginSuccess = await requestLogin(rest);
             console.log('loginSuccess:', loginSuccess);
             if (loginSuccess) {
-                navigate('/');
+                navigate('/profile/edit');
             } else {
                 navigate('/auth');
             }
