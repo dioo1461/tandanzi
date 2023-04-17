@@ -2,8 +2,8 @@ import axios from 'axios';
 import { authAxios } from 'utils/axiosFactory';
 
 
-export const getUserInstance = async () => {
-    return await authAxios.get('/users')
+export const getMyUser = async () => {
+    return await authAxios.get('/users/my')
     .then(res => {
         if (res.data === '') {
             return null;

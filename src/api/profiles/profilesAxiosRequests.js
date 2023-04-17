@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { authAxios } from 'utils/axiosFactory';
+import { toEditorSettings } from 'typescript';
+import { authAxios, defaultAxios } from 'utils/axiosFactory';
 
 
-export const getProfile = async () => {
-    return await authAxios.get('/profiles')
+export const getMyProfile = async () => {
+    return await authAxios.get('/profiles/my')
         .then(res => {
             if (res.data === '') {
                 return null;
@@ -11,8 +12,21 @@ export const getProfile = async () => {
             return res.data;
         })
         .catch(err => {
-            return null;
+            throw err;
         });
+}
+
+export const getProfile = async (uid) => {
+    return await defaultAxios.get(`profiles/${uid}`)
+    .then(res => {
+        if (res.data === '') {
+            return null;
+        }
+        return res.data;
+    })
+    .catch(err => {
+        throw err;
+    })
 }
 
 export const createProfile = async (data) => {
@@ -25,6 +39,12 @@ export const createProfile = async (data) => {
         })
 }
 
-export const updateProfile = async () => {
+export const updateProfile = async (data) => {
+    return await authAxios.post('/profiles', data)
+    .then(res => {
 
+    })
+    .catch(err => {
+        throw err;
+    })
 }

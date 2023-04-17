@@ -8,7 +8,6 @@ export const removeAccessToken = () => {
 
 export const checkIsAccessTokenAvailable = () => {
     if (localStorage.getItem(tokenName)) {
-        console.log(tokenName);
         return true;
     }
     return false;

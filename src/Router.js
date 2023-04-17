@@ -8,10 +8,9 @@
 // |나쁜 점:
 // |- Router의 base 속성이 설정되어 있지 않아서, URL 경로가 정확하지 않을 수 있습니다.
 // |- Routes 컴포넌트 안에 있는 Route 컴포넌트들이 중복되는 코드를 가지고 있어서, 코드의 양이 많아질 수 있습니다. 이를 개선하기 위해서는, Route 컴포넌트를 하나의 배열로 묶어서 중복을 제거할 수 있습니다.
-import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from 'routes/Home';
-import Profile from 'routes/profile/Profile';
+import MyProfile from 'routes/profile/MyProfile';
 import Journal from 'routes/Journal';
 import Analysis from 'routes/Analysis';
 import Foodpedia from 'routes/Foodpedia';
@@ -22,16 +21,18 @@ import { checkIsAccessTokenAvailable } from 'utils/accessTokenMethods';
 import MenuRecommendation from 'routes/MenuRecommendation';
 import Community from 'routes/community/Community';
 import ProfileEdit from 'routes/profile/ProfileEdit';
+
+
 const AppRouter = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     return (
         <Router base='/'>
             <Header />
             <Routes>
+            <>
                 <Route path='/' element={<Home />} />
                 { checkIsAccessTokenAvailable() ? 
                 <>
-                    <Route exact path='/user/profile' element={<Profile />} />
+                    <Route exact path='/user/profile' element={<MyProfile />} />
                     <Route exact path='/user/profile/edit' element={<ProfileEdit />} />
                     <Route exact path='/user/journal' element={<Journal />} />
                 </> 
@@ -48,6 +49,7 @@ const AppRouter = () => {
                 <Route exact path='/foodpedia' element={<Foodpedia />} />
                 <Route exact path='/menu-recommendation' element={<MenuRecommendation/>} />
                 <Route exact path='/community' element={<Community/>} />
+            </>
             </Routes>
         </Router>
     );

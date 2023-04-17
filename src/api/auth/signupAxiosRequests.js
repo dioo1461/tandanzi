@@ -1,9 +1,10 @@
 import axios from "axios";
+import { defaultAxios } from "utils/axiosFactory";
 
 
 export const CheckEmailUnique = async (email) => {
     const params = { email: email }
-    const res = await axios.get('/users', { params });
+    const res = await defaultAxios.get('/users', { params });
 
     if (res.data === '') {
         return Promise.resolve(true);
@@ -14,7 +15,7 @@ export const CheckEmailUnique = async (email) => {
 
 export const CheckUsernameUnique = async (username) => {
     const params = { username: username }
-    const res = await axios.get('/users', { params });
+    const res = await defaultAxios.get('/users', { params });
 
     if (res.data === '') {
         return Promise.resolve(true);
@@ -25,7 +26,7 @@ export const CheckUsernameUnique = async (username) => {
 
 /**  */
 export const SubmitSignupForm = async (data) => {
-    return await axios.post('/users', data)
+    return await defaultAxios.post('/users', data)
     .then(res => {
         console.log('then');
         return true;
