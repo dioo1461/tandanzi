@@ -1,5 +1,5 @@
 import { getMyProfile } from 'api/profiles/profilesAxiosRequests';
-import { getMyUser, getUserInstance } from 'api/users/userAxiosRequests';
+import { getMyAuthInfo, getUserInstance } from 'api/users/userAxiosRequests';
 import { Button, Image } from 'react-bootstrap';
 import { useEffect, useState, } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -26,7 +26,7 @@ const MyProfile = () => {
     const [waistHipRatio, setWaistHipRatio] = useState(0);
 
     const initProfile = async() => {
-        const user = await getMyUser();
+        const user = await getMyAuthInfo();
         setEmail(user.email);
         setUsername(user.username);
         
@@ -45,10 +45,6 @@ const MyProfile = () => {
         initProfile();
     }, [])
 
-    const onEditButtonClick = () => {
-
-    }
-
     return (
         <Container>
             <Row className='mt-5'>
@@ -61,6 +57,11 @@ const MyProfile = () => {
                     </Row>
                     <Row className='mb-4'>
                         이메일 : {email}
+                    </Row>
+                    <Row className='mb-4'>
+                        <Col>
+                            <Button onClick={() =>{navigate('/user/profile/authInfoEdit')}}>기본정보 수정</Button>
+                        </Col>
                     </Row>
                 </Col>
             </Row>
@@ -91,9 +92,9 @@ const MyProfile = () => {
                     {`체수분 : ${bodyWater}`}
                 </Col>
             </Row>
-            <Row>
+            <Row className='mt-4'>
                 <Col>
-                    <Button onClick={() => navigate('/user/profile/edit')}>수정</Button>
+                    <Button onClick={() => navigate('/user/profile/edit')}>프로필 수정</Button>
                 </Col>
             </Row>
         </Container>

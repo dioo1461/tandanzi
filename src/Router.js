@@ -21,6 +21,7 @@ import { checkIsAccessTokenAvailable } from 'utils/accessTokenMethods';
 import MenuRecommendation from 'routes/MenuRecommendation';
 import Community from 'routes/community/Community';
 import ProfileEdit from 'routes/profile/ProfileEdit';
+import UserAuthInfoEdit from 'routes/profile/UserAuthInfoEdit';
 
 
 const AppRouter = () => {
@@ -34,6 +35,7 @@ const AppRouter = () => {
                 <>
                     <Route exact path='/user/profile' element={<MyProfile />} />
                     <Route exact path='/user/profile/edit' element={<ProfileEdit />} />
+                    <Route exact path='/user/profile/authInfoEdit' element={<UserAuthInfoEdit />} />
                     <Route exact path='/user/journal' element={<Journal />} />
                 </> 
                 :
