@@ -80,16 +80,16 @@ const MyProfile = () => {
             </Row>
             <Row sm={2}>
                 <Col md={{ span: 3, offset: 2 }}>
-                    {`체수분 : ${bodyWater}`}
+                    {`체수분량 : ${bodyWater}`}
                 </Col>
                 <Col md={{ span: 3, offset: 2 }}>
-                    {`체수분 : ${bodyWater}`}
+                    {`단백질량 : ${bodyProtein}`}
                 </Col>
                 <Col md={{ span: 3, offset: 2 }}>
-                    {`체수분 : ${bodyWater}`}
+                    {`무기질량 : ${bodyMineral}`}
                 </Col>
                 <Col md={{ span: 3, offset: 2 }}>
-                    {`체수분 : ${bodyWater}`}
+                    {`체지방량 : ${bodyFat}`}
                 </Col>
             </Row>
             <Row className='mt-4'>
