@@ -1,4 +1,4 @@
-import { EMAIL_ERROR_TYPE, PASS_ERROR_TYPE, USERNAME_ERROR_TYPE } from "components/auth/signup/signupErrorTypes";
+import { EMAIL_ERROR_TYPE, PASS_ERROR_TYPE, USERNAME_ERROR_TYPE } from "components/auth/signup/methods/signupErrorTypes";
 
 export const ValidateEmailForm = (email) => {
     if (email === '') {

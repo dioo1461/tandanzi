@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react"
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap"
 import { UnwrittenBadge, ConfirmedBadge, ErrorBadge } from "components/auth/signup/SignupBadges";
-import { ValidateEmailForm, ValidatePasswordForm, ValidateUsernameForm } from "components/auth/signup/validateSignupForm";
+import { ValidateEmailForm, ValidatePasswordForm, ValidateUsernameForm } from "components/auth/signup/methods/validateSignupForm";
 import { SignupErrorTooltip, PasswordConfirmationUnmatchTooltip, PasswordNonmixedTooltip, PasswordShortLengthTooltip, PasswordUnpermittedWordTooltip } from "components/auth/signup/SignupErrorTooltip";
 import { isExternalModuleNameRelative } from "typescript";
-import { CheckEmailUnique, CheckUsernameUnique, SubmitSignupForm } from "api/auth/signupAxiosRequests";
+import { checkEmailUnique, checkUsernameUnique, submitSignupForm } from "api/auth/signupAxiosRequests";
 import { CheckDuplicationButton, ReInputButton } from "components/auth/signup/SignupFormButtons";
 import { useNavigate } from "react-router-dom";
 import { requestLogin } from "api/auth/loginAxiosRequests.js";
+import { EMAIL_ERROR_MESSAGE, PASS_ERROR_MESSAGE, USERNAME_ERROR_MESSAGE } from "components/auth/signup/methods/signupErrorMessages";
 
 export const EMAIL_ERROR_TYPE = {
     unwritten: 'unwritten',
@@ -93,11 +94,11 @@ const Signup = () => {
                 break;
             case EMAIL_ERROR_TYPE.invalid_form:
                 setIsEmailErrorEnabled(true);
-                setEmailErrorText('유효한 형식의 이메일을 입력해야 합니다.');
+                setEmailErrorText(EMAIL_ERROR_MESSAGE.invalid_form);
                 break;
             case EMAIL_ERROR_TYPE.existing_email:
                 setIsEmailErrorEnabled(true);
-                setEmailErrorText('중복된 이메일이 존재합니다.');
+                setEmailErrorText(EMAIL_ERROR_MESSAGE.existing_email);
                 break;
         }
     }, [emailError])
@@ -110,19 +111,19 @@ const Signup = () => {
                 break;
             case PASS_ERROR_TYPE.short_length:
                 setIsPasswordErrorEnabled(true);
-                setPasswordErrorText('비밀번호는 최소 6자 이상이어야 합니다.');
+                setPasswordErrorText(PASS_ERROR_MESSAGE.short_length);
                 break;
             case PASS_ERROR_TYPE.unpermitted_character:
                 setIsPasswordErrorEnabled(true);
-                setPasswordErrorText('비밀번호는 영어, 숫자, 특수문자로 구성되어야 합니다.');
+                setPasswordErrorText(PASS_ERROR_MESSAGE.unpermitted_character);
                 break;
             case PASS_ERROR_TYPE.non_mixed:
                 setIsPasswordErrorEnabled(true);
-                setPasswordErrorText('비밀번호에는 각각 최소 1개의 영어, 숫자, 특수문자가 포함되어야 합니다.');
+                setPasswordErrorText(PASS_ERROR_MESSAGE.non_mixed);
                 break;
             case PASS_ERROR_TYPE.confirmation_unmatch:
                 setIsPasswordErrorEnabled(true);
-                setPasswordErrorText('두 비밀번호가 일치하지 않습니다.');
+                setPasswordErrorText(PASS_ERROR_MESSAGE.confirmation_unmatch);
                 break;
         }
     }, [passwordError])
@@ -135,13 +136,13 @@ const Signup = () => {
                 break;
             case USERNAME_ERROR_TYPE.existing_username:
                 setIsUsernameErrorEnabled(true);
-                setUsernameErrorText('중복된 닉네임이 존재합니다.');
+                setUsernameErrorText(USERNAME_ERROR_MESSAGE.existing_username);
                 break;
         }
     }, [usernameError])
 
-    const checkEmailUnique = async () => {
-        await CheckEmailUnique(email)
+    const handleEmailDuplicationCheck = async () => {
+        await checkEmailUnique(email)
             .then(res => {
                 setIsEmailUnique(res);
                 if (res) {
@@ -152,8 +153,8 @@ const Signup = () => {
             });
     }
 
-    const checkUsernameUnique = async () => {
-        await CheckUsernameUnique(username)
+    const handleUsernameDuplicationCheck = async () => {
+        await checkUsernameUnique(username)
             .then(res => {
                 setIsUsernameUnique(res);
                 if (res) {
@@ -172,7 +173,7 @@ const Signup = () => {
             password: password,
             username: username
         }
-        const signupSuccess = await SubmitSignupForm(data);
+        const signupSuccess = await submitSignupForm(data);
         if (signupSuccess) {
             const { username, ...rest } = data;
             const loginSuccess = await requestLogin(rest);
@@ -202,7 +203,7 @@ const Signup = () => {
                                 {isEmailUnique ?
                                     <ReInputButton onClick={() => setIsEmailUnique(false)} />
                                     :
-                                    <CheckDuplicationButton onClick={checkEmailUnique} />
+                                    <CheckDuplicationButton onClick={handleEmailDuplicationCheck} />
                                 }
                             </>
                         }
@@ -227,7 +228,7 @@ const Signup = () => {
                                 {isUsernameUnique ?
                                     <ReInputButton onClick={() => setIsUsernameUnique(false)} />
                                     :
-                                    <CheckDuplicationButton onClick={checkUsernameUnique} />
+                                    <CheckDuplicationButton onClick={handleUsernameDuplicationCheck} />
                                 }
                             </>
                         }

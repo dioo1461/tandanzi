@@ -1,34 +1,33 @@
 import axios from "axios";
-import { defaultAxios } from "utils/axiosFactory";
+import { authAxios, defaultAxios } from "utils/axiosFactory";
 
 
-export const CheckEmailUnique = async (email) => {
+export const checkEmailUnique = async (email) => {
     const params = { email: email }
     const res = await defaultAxios.get('/users', { params });
 
     if (res.data === '') {
-        return Promise.resolve(true);
+        return true;
     } else {
-        return Promise.resolve(false);
+        return false;
     }
 }
 
-export const CheckUsernameUnique = async (username) => {
+export const checkUsernameUnique = async (username) => {
     const params = { username: username }
     const res = await defaultAxios.get('/users', { params });
 
     if (res.data === '') {
-        return Promise.resolve(true);
+        return true;
     } else {
-        return Promise.resolve(false);
+        return false;
     }
 }
 
 /**  */
-export const SubmitSignupForm = async (data) => {
+export const submitSignupForm = async (data) => {
     return await defaultAxios.post('/users', data)
     .then(res => {
-        console.log('then');
         return true;
     })
     .catch(err => {
@@ -36,3 +35,10 @@ export const SubmitSignupForm = async (data) => {
     })
 }
 
+export const updateAuthInfo = async (data) => {
+    return await authAxios.patch('/users', data)
+    .then(res => {
+
+    })
+
+}

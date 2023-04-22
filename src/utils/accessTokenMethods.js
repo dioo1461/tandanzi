@@ -14,6 +14,7 @@ export const checkIsAccessTokenAvailable = () => {
 }
 
 export const storeAccessToken = (jwt) => {
+    console.log('new token : ', jwt);
     localStorage.setItem(tokenName, jwt);
 }
 
@@ -24,5 +25,4 @@ export const getAccessToken = () => {
 export const decodeAccessToken = async() => {
     const token = localStorage.getItem(tokenName);
     return jwtDecode.decode(token);
-
 }
