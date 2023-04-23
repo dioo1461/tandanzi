@@ -202,10 +202,10 @@ const UserAuthInfoEdit = () => {
     }
 
     const handleEmailChangeConfirm = () => {
-        console.log('email: ', email, 'pass: ', password, 'originEmail: ',originEmail);
+        //console.log('email: ', email, 'pass: ', password, 'originEmail: ',originEmail);
         updateAuthInfo({email: email})
         .then(res => {
-            console.log('email: ',email, 'pass: ', password);
+            //console.log('email: ',email, 'pass: ', password);
             return requestLogin({email: email, password: password});
         })
         .then(res => {
@@ -213,7 +213,6 @@ const UserAuthInfoEdit = () => {
             setEmailError(EMAIL_ERROR_TYPE.unwritten);
             setIsEmailEditing(false);
             setIsEmailUnique(false);
-            console.log(res);
         })
     }
 
@@ -221,7 +220,6 @@ const UserAuthInfoEdit = () => {
         e.preventDefault();
         checkPassword(password)
             .then(res => {
-                console.log(res)
                 if (res) {
                     setIsAuthorized(true);
                 } else {

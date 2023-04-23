@@ -18,6 +18,9 @@ export const createAuthAxios = (options) => {
         })
 }
 
+export const updateAuthAxiosJwt = (token) => {
+    authAxios.defaults.headers['Authorization'] = `Bearer ${token}`;
+}
 
-export const defaultAxios = createAxios();       
+export const defaultAxios = createAxios();
 export const authAxios = createAuthAxios();

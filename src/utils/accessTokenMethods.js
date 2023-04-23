@@ -1,4 +1,5 @@
 import jwtDecode from "jwt-decode";
+import { updateAuthAxiosJwt } from "./axiosFactory";
 
 const tokenName = 'accessToken';
 
@@ -14,9 +15,10 @@ export const checkIsAccessTokenAvailable = () => {
 }
 
 export const storeAccessToken = (jwt) => {
-    console.log('origin token : ', localStorage.getItem(tokenName));
-    console.log('stored new token : ', jwt);
+    //console.log('origin token : ', localStorage.getItem(tokenName));
     localStorage.setItem(tokenName, jwt);
+    //console.log('stored new token : ', localStorage.getItem(tokenName));
+    updateAuthAxiosJwt(jwt);
 }
 
 export const getAccessToken = () => {

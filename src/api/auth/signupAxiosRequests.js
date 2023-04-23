@@ -1,5 +1,5 @@
 import axios from "axios";
-import { authAxios, createAuthAxios, defaultAxios } from "utils/axiosFactory";
+import { authAxios, defaultAxios } from "utils/axiosFactory";
 
 
 export const checkEmailUnique = async (email) => {
@@ -36,7 +36,7 @@ export const submitSignupForm = async (data) => {
 }
 
 export const updateAuthInfo = async (data) => {
-    return await createAuthAxios().patch('/users', data)
+    return await authAxios.patch('/users', data)
     .then(res => {
 
     })
