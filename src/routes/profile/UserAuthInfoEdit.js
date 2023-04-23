@@ -361,6 +361,7 @@ const UserAuthInfoEdit = () => {
                                     <Form.Control className="mb-3" type='password' value={password} onChange={handlePasswordChange} placeholder='ex) abcd1234!' />
                                 </Form.Group>
                                 <Button variant='primary' type='submit'>확인</Button>
+                                <Button className='ms-2' variant='secondary' >취소</Button>
                             </Form>
                             {loginAttemptCount > 0 ?
                                 <Alert className='mt-2' variant='danger'>{`비밀번호가 틀립니다. - ${loginAttemptCount}`}</Alert>
