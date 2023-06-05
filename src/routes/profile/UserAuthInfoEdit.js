@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react"
-import { Button, Col, Container, Form, InputGroup, Row, Alert } from "react-bootstrap"
+import { Button, Col, Container, Form, Row, Alert } from "react-bootstrap"
 import { UnwrittenBadge, ConfirmedBadge, ErrorBadge } from "components/auth/signup/SignupBadges";
 import { ValidateEmailForm, ValidatePasswordForm, ValidateUsernameForm } from "components/auth/signup/methods/validateSignupForm";
-import { SignupErrorTooltip, PasswordConfirmationUnmatchTooltip, PasswordNonmixedTooltip, PasswordShortLengthTooltip, PasswordUnpermittedWordTooltip } from "components/auth/signup/SignupErrorTooltip";
-import { isExternalModuleNameRelative } from "typescript";
+import { SignupErrorTooltip } from "components/auth/signup/SignupErrorTooltip";
 import { checkEmailUnique, checkUsernameUnique, submitSignupForm, updateAuthInfo } from "api/auth/signupAxiosRequests";
 import { CheckDuplicationButton, ReInputButton } from "components/auth/signup/SignupFormButtons";
 import { useNavigate } from "react-router-dom";
@@ -20,19 +19,16 @@ const UserAuthInfoEdit = () => {
 
     const [originEmail, setOriginEmail] = useState('');
     const [originUsername, setOriginUsername] = useState('');
-
-    const [latestEmail, setLatestEmail] = useState('');
-    const [latestUsername, setLatestUsername] = useState('');
-    
+    const [originPassword, setOriginPassword] = useState('');
 
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
-    const [username, setUsername] = useState('');
 
     const [isEmailEditing, setIsEmailEditing] = useState(false);
     const [isUsernameEditing, setIsUsernameEditing] = useState(false);
-    const [isPasswordEditing, setIsPasswordEditing] = useState(false);
+    const [isPasswordEdited, setIsPasswordEdited] = useState(false);
 
     const [emailError, setEmailError] = useState(EMAIL_ERROR_TYPE.unwritten);
     const [passwordError, setPasswordError] = useState(PASS_ERROR_TYPE.unwritten);
@@ -40,10 +36,10 @@ const UserAuthInfoEdit = () => {
 
     const [isEmailErrorEnabled, setIsEmailErrorEnabled] = useState(false);
     const [emailErrorText, setEmailErrorText] = useState('');
-    const [isPasswordErrorEnabled, setIsPasswordErrorEnabled] = useState(false);
-    const [passwordErrorText, setPasswordErrorText] = useState('');
     const [isUsernameErrorEnabled, setIsUsernameErrorEnabled] = useState(false);
     const [usernameErrorText, setUsernameErrorText] = useState('');
+    const [isPasswordErrorEnabled, setIsPasswordErrorEnabled] = useState(false);
+    const [passwordErrorText, setPasswordErrorText] = useState('');
 
     const [isEmailUnique, setIsEmailUnique] = useState(false);
     const [isUsernameUnique, setIsUsernameUnique] = useState(false);
@@ -64,6 +60,16 @@ const UserAuthInfoEdit = () => {
         }
     }
 
+    const handleUsernameChange = (e) => {
+        setUsername(e.target.value);
+        if (e.target.value === originUsername) {
+            setUsernameError(USERNAME_ERROR_TYPE.unwritten);
+        } else {
+            const error = ValidateUsernameForm(e.target.value);
+            setUsernameError(error);
+        }
+    }
+
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
         const error = ValidatePasswordForm(e.target.value, passwordConfirmation);
@@ -76,22 +82,16 @@ const UserAuthInfoEdit = () => {
         setPasswordError(error);
     }
 
-    const handleUsernameChange = (e) => {
-        setUsername(e.target.value);
-        const error = ValidateUsernameForm(e.target.value);
-        setUsernameError(error);
-    }
+
 
     useEffect(() => {
         getMyAuthInfo()
-        .then(user => {
-            setOriginEmail(user.email);
-            setLatestEmail(user.email);
-            setOriginUsername(user.username);
-            setLatestUsername(user.username);
-            setEmail(user.email);
-            setUsername(user.username);
-        });
+            .then(user => {
+                setOriginEmail(user.email);
+                setOriginUsername(user.username);
+                setEmail(user.email);
+                setUsername(user.username);
+            });
     }, [])
 
     useEffect(() => {
@@ -201,26 +201,54 @@ const UserAuthInfoEdit = () => {
         setIsEmailUnique(false);
     }
 
-    const handleEmailChangeConfirm = () => {
-        //console.log('email: ', email, 'pass: ', password, 'originEmail: ',originEmail);
-        updateAuthInfo({email: email})
-        .then(res => {
-            //console.log('email: ',email, 'pass: ', password);
-            return requestLogin({email: email, password: password});
-        })
-        .then(res => {
-            setOriginEmail(email);
-            setEmailError(EMAIL_ERROR_TYPE.unwritten);
-            setIsEmailEditing(false);
-            setIsEmailUnique(false);
-        })
+    const handleUsernameChangeCancel = () => {
+        setUsername(originUsername);
+        setUsernameError(USERNAME_ERROR_TYPE.unwritten);
+        setIsUsernameEditing(false);
+        setIsUsernameUnique(false);
     }
 
+    const handleEmailChangeConfirm = () => {
+        updateAuthInfo({ email: email })
+            .then(res => {
+                return requestLogin({ email: email, password: originPassword });
+            })
+            .then(res => {
+                setOriginEmail(email);
+                setEmailError(EMAIL_ERROR_TYPE.unwritten);
+                setIsEmailEditing(false);
+                setIsEmailUnique(false);
+            })
+    }
+
+    const handleUsernameChangeConfirm = () => {
+        updateAuthInfo({ username: username })
+            .then(res => {
+                setOriginUsername(username);
+                setUsernameError(USERNAME_ERROR_TYPE.unwritten);
+                setIsUsernameEditing(false);
+                setIsUsernameUnique(false);
+            })
+    }
+
+    const handlePasswordChangeConfirm = () => {
+        updateAuthInfo({ password: password })
+            .then(res => {
+                setOriginPassword(password);
+                setPasswordError(PASS_ERROR_TYPE.unwritten);
+                setPassword('');
+                setPasswordConfirmation('');
+                alert('비밀번호가 성공적으로 재설정되었습니다.');
+            })
+    }
     const handleAuthorization = (e) => {
         e.preventDefault();
         checkPassword(password)
             .then(res => {
                 if (res) {
+                    setOriginPassword(password);
+                    setPassword('');
+                    setPasswordError(PASS_ERROR_TYPE.unwritten);
                     setIsAuthorized(true);
                 } else {
                     setLoginAttemptCount(prev => prev + 1);
@@ -290,31 +318,61 @@ const UserAuthInfoEdit = () => {
                                         </Row>
                                     </div>
                                 }
-                                <Form.Group className="mb-3" controlId='formBasicEmail'>
-                                    <Form.Label className='me-2' >닉네임</Form.Label>
-                                    {usernameError === USERNAME_ERROR_TYPE.unwritten && <UnwrittenBadge />}
-                                    {usernameError === USERNAME_ERROR_TYPE.existing_username && <ErrorBadge ref={usernameBadgeRef} />}
-                                    {usernameError === USERNAME_ERROR_TYPE.confirmed &&
-                                        <>
-                                            <ConfirmedBadge />
-                                            {isUsernameUnique ?
-                                                <ReInputButton onClick={() => setIsUsernameUnique(false)} />
-                                                :
-                                                <CheckDuplicationButton onClick={checkUsernameUnique} />
-                                            }
-                                        </>
-                                    }
-                                    <SignupErrorTooltip
-                                        target={usernameBadgeRef}
-                                        show={isUsernameErrorEnabled}
-                                        text={usernameErrorText}
-                                    />
-                                    {isUsernameUnique ?
-                                        <Form.Control disabled value={username} placeholder='ex) nickname12' />
-                                        :
-                                        <Form.Control value={username} onChange={handleUsernameChange} placeholder='ex) nickname12' />
-                                    }
-                                </Form.Group>
+                                {!isUsernameEditing ?
+                                    <div>
+                                        <Row className='mt-4 mb-3'>
+                                            <Col>
+                                                닉네임 : {originUsername}
+                                            </Col>
+                                        </Row>
+                                        <Row className='mb-3'>
+                                            <Col>
+                                                <Button onClick={() => setIsUsernameEditing(!isUsernameEditing)}>수정</Button>
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                    :
+                                    <div>
+                                        <Row>
+                                            <Form.Group className="mb-3" controlId='formBasicEmail'>
+                                                <Form.Label className='me-2' >닉네임</Form.Label>
+                                                {usernameError === USERNAME_ERROR_TYPE.unwritten && <UnwrittenBadge />}
+                                                {usernameError === USERNAME_ERROR_TYPE.existing_username && <ErrorBadge ref={usernameBadgeRef} />}
+                                                {usernameError === USERNAME_ERROR_TYPE.confirmed &&
+                                                    <>
+                                                        <ConfirmedBadge />
+                                                        {isUsernameUnique ?
+                                                            <ReInputButton onClick={() => setIsUsernameUnique(false)} />
+                                                            :
+                                                            <CheckDuplicationButton onClick={handleUsernameDuplicationCheck} />
+                                                        }
+                                                    </>
+                                                }
+                                                <SignupErrorTooltip
+                                                    target={usernameBadgeRef}
+                                                    show={isUsernameErrorEnabled}
+                                                    text={usernameErrorText}
+                                                />
+                                                {isUsernameUnique ?
+                                                    <Form.Control disabled value={username} placeholder='ex) nickname12' />
+                                                    :
+                                                    <Form.Control value={username} onChange={handleUsernameChange} placeholder='ex) nickname12' />
+                                                }
+
+                                            </Form.Group>
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                                {usernameError === USERNAME_ERROR_TYPE.confirmed && isUsernameUnique ?
+                                                    <Button variant='primary' onClick={handleUsernameChangeConfirm}>완료</Button>
+                                                    :
+                                                    <Button variant='primary' disabled>완료</Button>
+                                                }
+                                                <Button className='ms-2' variant='secondary' onClick={handleUsernameChangeCancel}>취소</Button>
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                }
                                 <Form.Group className="mb-3" >
                                     <Form.Label className='me-2'>비밀번호</Form.Label>
                                     {passwordError === PASS_ERROR_TYPE.unwritten && <UnwrittenBadge />}
@@ -323,9 +381,7 @@ const UserAuthInfoEdit = () => {
                                         || passwordError === PASS_ERROR_TYPE.unpermitted_character
                                         || passwordError === PASS_ERROR_TYPE.non_mixed
                                         || passwordError === PASS_ERROR_TYPE.confirmation_unmatch
-                                    )
-                                        &&
-                                        <ErrorBadge ref={passwordBadgeRef} />}
+                                    ) && <ErrorBadge ref={passwordBadgeRef} />}
                                     {passwordError === PASS_ERROR_TYPE.confirmed && <ConfirmedBadge />}
                                     <SignupErrorTooltip
                                         target={passwordBadgeRef}
@@ -338,12 +394,10 @@ const UserAuthInfoEdit = () => {
                                     <Form.Label className='me-2'>비밀번호 확인</Form.Label>
                                     <Form.Control type='password' value={passwordConfirmation} onChange={handlePasswordConfirmationChange} placeholder='ex) abcd1234!' />
                                 </Form.Group>
-                                {emailError === EMAIL_ERROR_TYPE.confirmed && isEmailUnique
-                                    && passwordError === PASS_ERROR_TYPE.confirmed
-                                    && usernameError === USERNAME_ERROR_TYPE.confirmed && isUsernameUnique ?
-                                    <Button variant='primary' type='submit' >회원가입</Button>
+                                {passwordError === PASS_ERROR_TYPE.confirmed ?
+                                    <Button variant='primary' onClick={handlePasswordChangeConfirm}>비밀번호 수정</Button>
                                     :
-                                    <Button variant='primary' type='submit' disabled>회원가입</Button>
+                                    <Button variant='primary' disabled>비밀번호 수정</Button>
                                 }
                             </Form>
                         </Col>
@@ -359,7 +413,7 @@ const UserAuthInfoEdit = () => {
                                     <Form.Control className="mb-3" type='password' value={password} onChange={handlePasswordChange} placeholder='ex) abcd1234!' />
                                 </Form.Group>
                                 <Button variant='primary' type='submit'>확인</Button>
-                                <Button className='ms-2' variant='secondary' >취소</Button>
+                                <Button className='ms-2' variant='secondary' onClick={() => navigate('/user/profile')}>취소</Button>
                             </Form>
                             {loginAttemptCount > 0 ?
                                 <Alert className='mt-2' variant='danger'>{`비밀번호가 틀립니다. - ${loginAttemptCount}`}</Alert>

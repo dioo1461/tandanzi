@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react"
-import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap"
+import { Button, Col, Container, Form, Row } from "react-bootstrap"
 import { UnwrittenBadge, ConfirmedBadge, ErrorBadge } from "components/auth/signup/SignupBadges";
 import { ValidateEmailForm, ValidatePasswordForm, ValidateUsernameForm } from "components/auth/signup/methods/validateSignupForm";
-import { SignupErrorTooltip, PasswordConfirmationUnmatchTooltip, PasswordNonmixedTooltip, PasswordShortLengthTooltip, PasswordUnpermittedWordTooltip } from "components/auth/signup/SignupErrorTooltip";
-import { isExternalModuleNameRelative } from "typescript";
+import { SignupErrorTooltip } from "components/auth/signup/SignupErrorTooltip";
 import { checkEmailUnique, checkUsernameUnique, submitSignupForm } from "api/auth/signupAxiosRequests";
 import { CheckDuplicationButton, ReInputButton } from "components/auth/signup/SignupFormButtons";
 import { useNavigate } from "react-router-dom";

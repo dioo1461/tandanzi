@@ -79,7 +79,7 @@ const CategorySelect = ({ getCategories }) => {
                     ))}
                 </Form.Select>}
             <Button className="mt-1" variant='success' onClick={onSubmit}>선택 완료</Button>
-            <Button className="mt-1" variant='light' onClick={onClickClear}>초기화</Button>
+            <Button className="mt-1 ms-2" variant='light' onClick={onClickClear}>초기화</Button>
         </Form>
     );
 };

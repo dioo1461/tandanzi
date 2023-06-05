@@ -70,7 +70,7 @@ const ProfileEdit = () => {
                     <Col xs={{ span: 10, offset: 1 }} md={{ span: 8, offset: 2 }} lg={{ span: 6, offset: 3 }}>
                         <Form.Group className="mb-3">
                             <Form.Label className='me-2'>나이</Form.Label>
-                            <Form.Control type='number' value={age} onChange={(e) => setAge(e.target.value)} placeholder='24' />
+                            <Form.Control type='number' value={age} onChange={(e) => setAge(e.target.value)} placeholder='ex) 24' />
                         </Form.Group>
                     </Col>
                 </Row>
@@ -87,25 +87,25 @@ const ProfileEdit = () => {
                     <Col xs={{ span: 5, offset: 1 }} md={{ span: 4, offset: 2 }} lg={{ span: 3, offset: 3 }}>
                         <Form.Group className="mb-3">
                             <Form.Label className='me-2'>체수분량</Form.Label>
-                            <Form.Control type='number' value={bodyWater} onChange={(e) => setBodyWater(e.target.value)} placeholder='24' />
+                            <Form.Control type='number' value={bodyWater} onChange={(e) => setBodyWater(e.target.value)} placeholder='ex) 24' />
                         </Form.Group>
                     </Col>
                     <Col xs={{ span: 5, offset: 0 }} md={{ span: 4, offset: 0 }} lg={{ span: 3, offset: 0 }}>
-                        <Form.Group Group className="mb-3">
+                        <Form.Group className="mb-3">
                             <Form.Label className='me-2'>단백질량</Form.Label>
-                            <Form.Control type='number' value={bodyProtein} onChange={(e) => setBodyProtein(e.target.value)} placeholder='24' />
+                            <Form.Control type='number' value={bodyProtein} onChange={(e) => setBodyProtein(e.target.value)} placeholder='ex) 24' />
                         </Form.Group>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={{ span: 5, offset: 1 }} md={{ span: 4, offset: 2 }} lg={{ span: 3, offset: 3 }}>
-                        <Form.Group Group className="mb-3">
+                        <Form.Group className="mb-3">
                             <Form.Label className='me-2'>무기질량</Form.Label>
                             <Form.Control type='number' value={bodyMineral} onChange={(e) => setBodyMineral(e.target.value)} placeholder='24' />
                         </Form.Group>
                     </Col>
                     <Col xs={{ span: 5, offset: 0 }} md={{ span: 4, offset: 0 }} lg={{ span: 3, offset: 0 }}>
-                        <Form.Group Group className="mb-3">
+                        <Form.Group className="mb-3">
                             <Form.Label className='me-2'>체지방량</Form.Label>
                             <Form.Control type='number' value={bodyFat} onChange={(e) => setBodyFat(e.target.value)} placeholder='24' />
                         </Form.Group>
@@ -114,6 +114,7 @@ const ProfileEdit = () => {
                 <Row className='justify-content-start mt-3'>
                     <Col xs={{ span: 5, offset: 1 }} md={{ span: 4, offset: 2 }} lg={{ span: 3, offset: 3 }}>
                         <Button variant='primary' type='submit'>수정 완료</Button>
+                        <Button className='ms-2' variant='secondary' onClick={()=>navigate('/user/profile')}>취소</Button>
                     </Col>
                 </Row>
             </Form>

@@ -3,8 +3,9 @@ import foodData from 'data/Foods.json';
 import FoodDisplay from 'components/analysis/FoodDisplay';
 import FoodSelectModal from 'components/analysis/FoodSelectModal';
 import SelectedFoodDisplay from 'components/analysis/SelectedFoodDisplay';
-import { Form, Button, Container, InputGroup, Collapse, Row, Col } from 'react-bootstrap';
+import { Form, Button, Container, InputGroup, Collapse, Row, Col, ListGroup } from 'react-bootstrap';
 import CategorySelect from 'components/analysis/CategorySelect';
+import styled from 'styled-components';
 
 const Analysis = () => {
     const [currentSearching, setCurrentSearching] = useState("");
@@ -27,6 +28,12 @@ const Analysis = () => {
     const [secondCategory, setSecondCategory] = useState('');
     const [thirdCategory, setThirdCategory] = useState('');
 
+    const [scrollContainerHeight, setScrollContainerHeight] = useState(400);
+
+    const handleWindowResize = () => setScrollContainerHeight(() => {
+        let clampedRes = Math.min(Math.max(window.innerHeight - 400, 200), 400);
+        return clampedRes;
+    })
 
     const isNameCorrect = (element) => {
         if (currentSearching === '') {
@@ -60,15 +67,6 @@ const Analysis = () => {
         }
         return true;
     }
-
-    useEffect(() => {
-        // 검색어와 이름의 일부가 일치하는 객체들을 배열 foodArr에 담음
-        let newArr = foodData.filter(isNameCorrect);
-        if (isCategoryEnabled) {
-            newArr = newArr.filter(isCategoryCorrect);
-        }
-        setFoodArr(newArr);
-    }, [currentSearching, isCategoryEnabled]);
 
     const searchOnChange = (event) => {
         const { value } = event.target;
@@ -149,13 +147,36 @@ const Analysis = () => {
         }
     }
 
+    const ScrollContainer = styled.div`
+    overflow: auto;
+    overflow-x: hidden;
+    height: ${scrollContainerHeight}px;
+    border: 1px solid white;
+    `;
+
+    useEffect(()=> {
+        handleWindowResize();
+        window.addEventListener('resize', handleWindowResize);
+        return () => window.removeEventListener('resize', handleWindowResize)
+    }
+    , []);
+
+    useEffect(() => {
+        // 검색어와 이름의 일부가 일치하는 객체들을 배열 foodArr에 담음
+        let newArr = foodData.filter(isNameCorrect);
+        if (isCategoryEnabled) {
+            newArr = newArr.filter(isCategoryCorrect);
+        }
+        setFoodArr(newArr);
+    }, [currentSearching, isCategoryEnabled]);
+
     useEffect(sumAllNutrients, [isModalEnabled, selectedFoodList]);
 
     return (
         <div>
             <Container fluid>
                 <Row sm={3}>
-                    <Col sm={{span:10, offset:1}} md={{span:8, offset:2}}>
+                    <Col sm={{ span: 10, offset: 1 }} md={{ span: 8, offset: 2 }}>
                         <Form.Check>
                             <Form.Check.Input id='FormCheck' type='checkbox' onChange={onCheckboxClick} />
                             <Form.Check.Label htmlFor='FormCheck'>카테고리 선택</Form.Check.Label>
@@ -174,46 +195,60 @@ const Analysis = () => {
                         </Form>
                     </Col>
                 </Row>
-            </Container>
-            <div>
+                <Row sm={3} className='mt-3'>
+                    <Col sm={{ span: 10, offset: 1 }} md={{ span: 8, offset: 2 }}>
+                        <ScrollContainer>
+                            {/* 검색어와 일치하는 음식들을 나열*/}
+                            <ListGroup as='ul'>
+                                {foodArr.map((element) =>
+                                    <ListGroup.Item as='li' action onClick={{}}>
+                                        <FoodDisplay
+                                            key={element.id}
+                                            currentFood={element}
+                                            getFoodClick={getFoodClick}
+                                        />
+                                    </ListGroup.Item>
+                                )}
+                            </ListGroup>
+                        </ScrollContainer>
 
-                {isModalEnabled &&
-                    <FoodSelectModal
-                        currentFood={currentFood}
-                        isModalEnabled={isModalEnabled}
-                        getModalExit={getModalExit}
-                        getCurrentFoodFromModal={getCurrentFoodFromModal}
-                    />}
-                <br />
-                {/*선택한 음식들을 나열, 칼로리를 계산 */}
-                선택한 식품 목록
-                {selectedFoodList.map((element) =>
-                    <SelectedFoodDisplay
-                        key={element.food.id}
-                        currentFood={element}
-                        getEditEnter={getEditEnter}
-                        getDeleteEnter={getDeleteEnter}
-                    />)
-                }
-                <br />
-                총 칼로리 :
-                {totalCalories.toFixed(1)} kcal
-                <br />
-                {`탄 : ${totalCarbs.toFixed(1)}g  
+                        {isModalEnabled &&
+                            <FoodSelectModal
+                                currentFood={currentFood}
+                                isModalEnabled={isModalEnabled}
+                                getModalExit={getModalExit}
+                                getCurrentFoodFromModal={getCurrentFoodFromModal}
+                            />}
+                        <br />
+                        {/*선택한 음식들을 나열, 칼로리를 계산 */}
+                        선택한 식품 목록
+                        {selectedFoodList.map((element) =>
+                            <SelectedFoodDisplay
+                                key={element.food.id}
+                                currentFood={element}
+                                getEditEnter={getEditEnter}
+                                getDeleteEnter={getDeleteEnter}
+                            />)
+                        }
+                        <br />
+                        총 칼로리 :
+                        {totalCalories.toFixed(1)} kcal
+                        <br />
+                        {`탄 : ${totalCarbs.toFixed(1)}g  
                 단 : ${totalProtein.toFixed(1)}g  
                 지 : ${totalFat.toFixed(1)}g`}
 
-                {/* 검색어와 일치하는 음식들을 나열*/}
-                {foodArr.map((element) =>
-                    <FoodDisplay
-                        key={element.id}
-                        currentFood={element}
-                        getFoodClick={getFoodClick}
-                    />
-                )}
-            </div>
+
+                    </Col>
+                </Row>
+            </Container>
+
         </div>
     )
+    
+
 }
+
+
 
 export default Analysis;
