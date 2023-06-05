@@ -1,4 +1,4 @@
-import { useState, useEffect, } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import foodData from 'data/Foods.json';
 import FoodDisplay from 'components/analysis/FoodDisplay';
 import FoodSelectModal from 'components/analysis/FoodSelectModal';
@@ -29,11 +29,27 @@ const Analysis = () => {
     const [thirdCategory, setThirdCategory] = useState('');
 
     const [scrollContainerHeight, setScrollContainerHeight] = useState(400);
+    const scrollContainerRef = useRef(null);
+    const [scrollPos, setScrollPos] = useState(0);
 
     const handleWindowResize = () => setScrollContainerHeight(() => {
-        let clampedRes = Math.min(Math.max(window.innerHeight - 400, 200), 400);
+        let clampedRes = Math.min(Math.max(window.innerHeight - 400, 200), 300);
         return clampedRes;
     })
+
+    const handleScroll = () => {
+        setScrollPos(scrollContainerRef.current.scrollTop)
+    }
+
+    // const clampScrollContainerHeight = (height) => {
+    //     let clampedRes = Math.min(Math.max(height - 400, 200), 400);
+    //     setScrollContainerHeight(clampedRes);
+    // }
+
+    // const handleWindowResize = () => (() => {
+    //     clampScrollContainerHeight(window.innerHeight)
+    // })
+
 
     const isNameCorrect = (element) => {
         if (currentSearching === '') {
@@ -73,12 +89,14 @@ const Analysis = () => {
         setCurrentSearching(value);
     }
 
-    const getFoodClick = (food) => {
+    const onFoodClick = (food) => {
         setCurrentFood({ food, num: 0, isGram: false });
         setIsModalEnabled(true);
+        setScrollPos(scrollContainerRef.current.scrollTop);
+        console.log("1: " + scrollContainerRef.current.scrollTop);
     }
 
-    const getModalExit = () => {
+    const onModalExit = () => {
         setIsModalEnabled(false);
     }
 
@@ -103,11 +121,11 @@ const Analysis = () => {
         }
     }
 
-    const getEditEnter = (currentFood) => {
+    const onEdit = (currentFood) => {
         setIsModalEnabled(true);
         setCurrentFood(currentFood);
     }
-    const getDeleteEnter = (food) => {
+    const onDelete = (food) => {
         setSelectedFoodList(selectedFoodList.filter((element) => element.food.id !== food.id));
     }
 
@@ -125,10 +143,9 @@ const Analysis = () => {
         selectedFoodList.map((element) => sum += element.isGram ? element.num * element.food.fat / element.food.gram_per_unit : element.num * element.food.fat);
         setTotalFat(sum);
         sum = 0;
-
     }
 
-    const getCategories = (first, second, third) => {
+    const onCategoriesSelected = (first, second, third) => {
         setIsCategoryEnabled(true);
         setIsCategoryOpened(false);
         setFirstCategory(first);
@@ -154,12 +171,15 @@ const Analysis = () => {
     border: 1px solid white;
     `;
 
-    useEffect(()=> {
+    useEffect(() => {
         handleWindowResize();
         window.addEventListener('resize', handleWindowResize);
-        return () => window.removeEventListener('resize', handleWindowResize)
-    }
-    , []);
+        //scrollContainerRef.current.addEventListener('scroll', handleScroll);
+        return (() => {
+            window.removeEventListener('resize', handleWindowResize);
+            //scrollContainerRef.current.addEventListener('scroll', handleScroll);
+        })
+    }, []);
 
     useEffect(() => {
         // 검색어와 이름의 일부가 일치하는 객체들을 배열 foodArr에 담음
@@ -170,7 +190,11 @@ const Analysis = () => {
         setFoodArr(newArr);
     }, [currentSearching, isCategoryEnabled]);
 
-    useEffect(sumAllNutrients, [isModalEnabled, selectedFoodList]);
+    useEffect(() => {
+        sumAllNutrients();
+        scrollContainerRef.current.scrollTop = scrollPos;
+        console.log("2: " + scrollContainerRef.current.scrollTop);
+    }, [isModalEnabled, selectedFoodList]);
 
     return (
         <div>
@@ -183,7 +207,7 @@ const Analysis = () => {
                         </Form.Check>
                         <Collapse in={isCategoryOpened}>
                             <div>
-                                <CategorySelect getCategories={getCategories} />
+                                <CategorySelect onCategoriesSelected={onCategoriesSelected} />
                             </div>
                         </Collapse>
                         <Form>
@@ -197,15 +221,14 @@ const Analysis = () => {
                 </Row>
                 <Row sm={3} className='mt-3'>
                     <Col sm={{ span: 10, offset: 1 }} md={{ span: 8, offset: 2 }}>
-                        <ScrollContainer>
+                        <ScrollContainer as='div' ref={scrollContainerRef}>
                             {/* 검색어와 일치하는 음식들을 나열*/}
                             <ListGroup as='ul'>
                                 {foodArr.map((element) =>
-                                    <ListGroup.Item as='li' action onClick={{}}>
+                                    <ListGroup.Item key={element.id} as='li' action>
                                         <FoodDisplay
-                                            key={element.id}
                                             currentFood={element}
-                                            getFoodClick={getFoodClick}
+                                            onFoodClick={onFoodClick}
                                         />
                                     </ListGroup.Item>
                                 )}
@@ -216,7 +239,7 @@ const Analysis = () => {
                             <FoodSelectModal
                                 currentFood={currentFood}
                                 isModalEnabled={isModalEnabled}
-                                getModalExit={getModalExit}
+                                onModalExit={onModalExit}
                                 getCurrentFoodFromModal={getCurrentFoodFromModal}
                             />}
                         <br />
@@ -226,8 +249,8 @@ const Analysis = () => {
                             <SelectedFoodDisplay
                                 key={element.food.id}
                                 currentFood={element}
-                                getEditEnter={getEditEnter}
-                                getDeleteEnter={getDeleteEnter}
+                                onEdit={onEdit}
+                                onDelete={onDelete}
                             />)
                         }
                         <br />
@@ -245,7 +268,7 @@ const Analysis = () => {
 
         </div>
     )
-    
+
 
 }
 

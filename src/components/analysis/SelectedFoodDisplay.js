@@ -1,13 +1,13 @@
 import { useState, } from 'react';
 import { Button } from 'react-bootstrap';
 
-const SelectedFoodDisplay = ({ currentFood, getEditEnter, getDeleteEnter }) => {
+const SelectedFoodDisplay = ({ currentFood, onEdit, onDelete }) => {
 
     const onClickEdit = () => {
-        getEditEnter(currentFood);
+        onEdit(currentFood);
     }
     const onClickDelete = () => {
-        getDeleteEnter(currentFood.food);
+        onDelete(currentFood.food);
     }
     return (
         <>

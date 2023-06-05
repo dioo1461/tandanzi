@@ -1,10 +1,10 @@
 import { useState, } from 'react'
 import FoodSelected from "components/analysis/FoodSelectModal";
 
-const FoodDisplay = ({ currentFood, getFoodClick }) => {
+const FoodDisplay = ({ currentFood, onFoodClick }) => {
     const [flag, setFlag] = useState(false);
     const onClick = () => {
-        getFoodClick(currentFood);
+        onFoodClick(currentFood);
     }
 
     return (

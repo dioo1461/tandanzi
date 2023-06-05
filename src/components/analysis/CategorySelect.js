@@ -14,7 +14,7 @@ import firstCategoryData from 'data/Categories_first.json';
 import secondCategoryData from 'data/Categories_second.json';
 import thirdCategoryData from 'data/Categories_third.json';
 
-const CategorySelect = ({ getCategories }) => {
+const CategorySelect = ({ onCategoriesSelected }) => {
     const [first, setFirst] = useState('');
     const [second, setSecond] = useState('');
     const [third, setThird] = useState('');
@@ -47,7 +47,7 @@ const CategorySelect = ({ getCategories }) => {
     };
 
     const onSubmit = () => {
-        getCategories(first, second, third);
+        onCategoriesSelected(first, second, third);
     };
 
     const onClickClear = () => {

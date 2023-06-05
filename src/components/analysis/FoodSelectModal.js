@@ -14,7 +14,7 @@ import { useState, useEffect } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
 import CalorieCalculation from './CalorieCalculation';
 
-const FoodSelectModal = ({ currentFood, isModalEnabled, getModalExit, getCurrentFoodFromModal }) => {
+const FoodSelectModal = ({ currentFood, isModalEnabled, onModalExit, getCurrentFoodFromModal }) => {
 
     const [displayNum, setDisplayNum] = useState(0);
     const [unitNum, setUnitNum] = useState(currentFood.num);
@@ -44,7 +44,7 @@ const FoodSelectModal = ({ currentFood, isModalEnabled, getModalExit, getCurrent
 
     const onSubmit = (event) => {
         event.preventDefault();
-        getModalExit();
+        onModalExit();
         getCurrentFoodFromModal(displayNum, isGram, calories);
     }
 
@@ -55,7 +55,7 @@ const FoodSelectModal = ({ currentFood, isModalEnabled, getModalExit, getCurrent
         , [isGram]);
 
     return (
-        <Modal show={isModalEnabled} onHide={getModalExit}>
+        <Modal show={isModalEnabled} onHide={onModalExit}>
             <Modal.Header closeButton>
                 <Modal.Title>식품 섭취량 정보 입력</Modal.Title>
             </Modal.Header>
