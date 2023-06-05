@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import foodData from 'data/Foods.json';
 import FoodSelectModal from 'components/analysis/FoodSelectModal';
 import SelectedFoodDisplay from 'components/analysis/SelectedFoodDisplay';
-import { Form, Button, Container, InputGroup, Collapse, Row, Col, ListGroup } from 'react-bootstrap';
+import { Form, Button, Container, InputGroup, Collapse, Row, Col, ListGroup, Accordion } from 'react-bootstrap';
 import CategorySelect from 'components/analysis/CategorySelect';
 import styled from 'styled-components';
+import { CarbohydrateBadge, FatBadge, ProteinBadge } from 'components/analysis/AnalysisBadges';
 
 const Analysis = () => {
     const [currentSearching, setCurrentSearching] = useState("");
@@ -30,6 +31,8 @@ const Analysis = () => {
     const [scrollContainerHeight, setScrollContainerHeight] = useState(400);
     const scrollContainerRef = useRef(null);
     const [scrollPos, setScrollPos] = useState(0);
+
+    const [accordionActiveKey, setAccordionActiveKey] = useState("")
 
     const handleWindowResize = () => setScrollContainerHeight(() => {
         let clampedRes = Math.min(Math.max(window.innerHeight - 400, 200), 300);
@@ -92,7 +95,6 @@ const Analysis = () => {
         setCurrentFood({ food, num: 0, isGram: false });
         setIsModalEnabled(true);
         setScrollPos(scrollContainerRef.current.scrollTop);
-        console.log("1: " + scrollContainerRef.current.scrollTop);
     }
 
     const onModalExit = () => {
@@ -192,8 +194,15 @@ const Analysis = () => {
     useEffect(() => {
         sumAllNutrients();
         scrollContainerRef.current.scrollTop = scrollPos;
-        console.log("2: " + scrollContainerRef.current.scrollTop);
     }, [isModalEnabled, selectedFoodList]);
+
+    useEffect(() => {
+        if (selectedFoodList.length > 0) {
+            setAccordionActiveKey("0")
+        } else {
+            setAccordionActiveKey("")
+        }
+    }, [selectedFoodList])
 
     return (
         <div>
@@ -218,7 +227,7 @@ const Analysis = () => {
                         </Form>
                     </Col>
                 </Row>
-                <Row sm={3} className='mt-3'>
+                <Row sm={3} className='mt-3 mb-5'>
                     <Col sm={{ span: 10, offset: 1 }} md={{ span: 8, offset: 2 }}>
                         <ScrollContainer as='div' ref={scrollContainerRef}>
                             {/* 검색어와 일치하는 음식들을 나열*/}
@@ -244,24 +253,44 @@ const Analysis = () => {
                             />}
                         <br />
                         {/*선택한 음식들을 나열, 칼로리를 계산 */}
-                        선택한 식품 목록
-                        {selectedFoodList.map((element) =>
-                            <SelectedFoodDisplay
-                                key={element.food.id}
-                                currentFood={element}
-                                onClickEdit={onClickEdit}
-                                onClickDelete={onClickDelete}
-                            />)
-                        }
-                        <br />
-                        총 칼로리 :
-                        {totalCalories.toFixed(1)} kcal
-                        <br />
-                        {`탄 : ${totalCarbs.toFixed(1)}g  
-                단 : ${totalProtein.toFixed(1)}g  
-                지 : ${totalFat.toFixed(1)}g`}
 
-
+                        <Accordion activeKey={accordionActiveKey} className='mb-3'>
+                            <Accordion.Item eventKey="0">
+                                <Accordion.Header onClick={() => {
+                                    accordionActiveKey === "0" ?
+                                        setAccordionActiveKey("") : setAccordionActiveKey("0")
+                                }}>
+                                    선택한 식품 목록
+                                </Accordion.Header>
+                                <Accordion.Body>
+                                    <ListGroup as='ul'>
+                                        {selectedFoodList.map((element) =>
+                                            <ListGroup.Item as='li' key={element.food.id}>
+                                                <SelectedFoodDisplay
+                                                    currentFood={element}
+                                                    onClickEdit={onClickEdit}
+                                                    onClickDelete={onClickDelete}
+                                                />
+                                            </ListGroup.Item>
+                                        )}
+                                    </ListGroup>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        </Accordion>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            {`총 칼로리 : ${totalCalories.toFixed(1)} kcal`}
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <div>
+                                <CarbohydrateBadge />{` ${totalCarbs.toFixed(1)}g  `}
+                            </div>
+                            <div>
+                                <ProteinBadge /> {` ${totalProtein.toFixed(1)}g  `}
+                            </div>
+                            <div>
+                                <FatBadge /> {` ${totalFat.toFixed(1)}g  `}
+                            </div>
+                        </div>
                     </Col>
                 </Row>
             </Container>

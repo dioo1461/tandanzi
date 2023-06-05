@@ -1,5 +1,5 @@
 import { useState, } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Container, Row, Col } from 'react-bootstrap';
 
 const SelectedFoodDisplay = ({ currentFood, onClickEdit, onClickDelete }) => {
 
@@ -10,14 +10,19 @@ const SelectedFoodDisplay = ({ currentFood, onClickEdit, onClickDelete }) => {
         onClickDelete(currentFood.food);
     }
     return (
-        <div>
-                {`${currentFood.food.name}, 
+        <Container fluid>
+            <Row>
+                <Col style={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
+                    {`${currentFood.food.name}, 
                 ${currentFood.num}${currentFood.isGram ? currentFood.food.unit_name : '인분'}`}
-                {!currentFood.isGram && `(${currentFood.food.gram_per_unit * currentFood.num}${currentFood.food.unit_name})`}
-                <Button className='ms-2' variant='light' onClick={handleEdit}>편집</Button>
-                <Button className='ms-2' variant='light' onClick={handleDelete}>삭제</Button>
-                <br />
-        </div>
+                    {!currentFood.isGram && `(${currentFood.food.gram_per_unit * currentFood.num}${currentFood.food.unit_name})`}
+                </Col>
+                <Col style={{ display: 'flex', justifyContent: 'right', alignItems: 'center' }}>
+                    <Button className='ms-2 text-right' variant='light' onClick={handleEdit}>편집</Button>
+                    <Button className='ms-2' variant='light' onClick={handleDelete}>삭제</Button>
+                </Col>
+            </Row>
+        </Container>
     )
 }
 
