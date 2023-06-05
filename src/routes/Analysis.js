@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import foodData from 'data/Foods.json';
-import FoodDisplay from 'components/analysis/FoodDisplay';
 import FoodSelectModal from 'components/analysis/FoodSelectModal';
 import SelectedFoodDisplay from 'components/analysis/SelectedFoodDisplay';
 import { Form, Button, Container, InputGroup, Collapse, Row, Col, ListGroup } from 'react-bootstrap';
@@ -121,11 +120,11 @@ const Analysis = () => {
         }
     }
 
-    const onEdit = (currentFood) => {
+    const onClickEdit = (currentFood) => {
         setIsModalEnabled(true);
         setCurrentFood(currentFood);
     }
-    const onDelete = (food) => {
+    const onClickDelete = (food) => {
         setSelectedFoodList(selectedFoodList.filter((element) => element.food.id !== food.id));
     }
 
@@ -225,11 +224,12 @@ const Analysis = () => {
                             {/* 검색어와 일치하는 음식들을 나열*/}
                             <ListGroup as='ul'>
                                 {foodArr.map((element) =>
-                                    <ListGroup.Item key={element.id} as='li' action>
-                                        <FoodDisplay
-                                            currentFood={element}
-                                            onFoodClick={onFoodClick}
-                                        />
+                                    <ListGroup.Item
+                                        as='li'
+                                        key={element.id}
+                                        onClick={() => onFoodClick(element)}
+                                        action>
+                                        {element.name}
                                     </ListGroup.Item>
                                 )}
                             </ListGroup>
@@ -249,8 +249,8 @@ const Analysis = () => {
                             <SelectedFoodDisplay
                                 key={element.food.id}
                                 currentFood={element}
-                                onEdit={onEdit}
-                                onDelete={onDelete}
+                                onClickEdit={onClickEdit}
+                                onClickDelete={onClickDelete}
                             />)
                         }
                         <br />

@@ -1,25 +1,23 @@
 import { useState, } from 'react';
 import { Button } from 'react-bootstrap';
 
-const SelectedFoodDisplay = ({ currentFood, onEdit, onDelete }) => {
+const SelectedFoodDisplay = ({ currentFood, onClickEdit, onClickDelete }) => {
 
-    const onClickEdit = () => {
-        onEdit(currentFood);
+    const handleEdit = () => {
+        onClickEdit(currentFood);
     }
-    const onClickDelete = () => {
-        onDelete(currentFood.food);
+    const handleDelete = () => {
+        onClickDelete(currentFood.food);
     }
     return (
-        <>
-            <div>
+        <div>
                 {`${currentFood.food.name}, 
                 ${currentFood.num}${currentFood.isGram ? currentFood.food.unit_name : '인분'}`}
                 {!currentFood.isGram && `(${currentFood.food.gram_per_unit * currentFood.num}${currentFood.food.unit_name})`}
-                <Button variant='light' onClick={onClickEdit}>편집</Button>
-                <Button variant='light' onClick={onClickDelete}>삭제</Button>
+                <Button className='ms-2' variant='light' onClick={handleEdit}>편집</Button>
+                <Button className='ms-2' variant='light' onClick={handleDelete}>삭제</Button>
                 <br />
-            </div>
-        </>
+        </div>
     )
 }
 
