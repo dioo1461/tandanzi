@@ -13,7 +13,7 @@ import { Button, Container, Form, Nav, Navbar, NavDropdown, Offcanvas } from "re
 import { useLinkClickHandler, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { checkIsAccessTokenAvailable } from "utils/accessTokenMethods";
-import { logout } from "utils/logout";
+import { handleLogout } from "utils/logout";
 
 
 const OffcanvasNavbar = () => {
@@ -38,7 +38,7 @@ const OffcanvasNavbar = () => {
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   { checkIsAccessTokenAvailable() ?
                   <>
-                    <Nav.Link onClick={logout}>로그아웃</Nav.Link>
+                    <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
                     <Nav.Link href='/user/profile'>내 프로필</Nav.Link>
                   </>
                   :
@@ -47,7 +47,7 @@ const OffcanvasNavbar = () => {
                   }
                   <Nav.Link href="/analysis">칼로리 분석</Nav.Link>
                   <Nav.Link href="/foodpedia">칼로리 사전</Nav.Link>
-                  <Nav.Link href="/user/journal">식사 일지</Nav.Link>
+                  <Nav.Link href="/user/journal">식단 일지</Nav.Link>
                   <Nav.Link href="/menu-recommendation">메뉴 추천</Nav.Link>
                 </Nav>
               </Offcanvas.Body>

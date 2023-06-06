@@ -293,6 +293,11 @@ const Analysis = () => {
                                 <FatBadge /> {` ${totalFat.toFixed(1)}g  `}
                             </div>
                         </div>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Button variant='outline-primary' className='mt-4'>
+                                일지에 식단 기록하기
+                            </Button>
+                        </div>
                     </Col>
                 </Row>
             </Container>

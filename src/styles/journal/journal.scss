@@ -1,0 +1,13 @@
+.calendar {
+    text-align: center;
+
+    tbody {
+        tr {
+            height: 110px;
+        }
+    }
+
+    .hoverable-cell:hover {
+        background-color: rgb(242, 249, 255);
+    }
+}

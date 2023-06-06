@@ -1,6 +1,6 @@
 import { removeAccessToken } from "./accessTokenMethods";
 
-export const logout = () => {
+export const handleLogout = () => {
     removeAccessToken();
     window.location.reload();
 }

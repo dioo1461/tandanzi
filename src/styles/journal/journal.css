@@ -1,0 +1,9 @@
+.calendar {
+  text-align: center;
+}
+.calendar tbody tr {
+  height: 110px;
+}
+.calendar .hoverable-cell:hover {
+  background-color: rgb(242, 249, 255);
+}/*# sourceMappingURL=journal.css.map */
