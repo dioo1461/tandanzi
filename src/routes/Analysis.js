@@ -30,7 +30,7 @@ const Analysis = () => {
 
     const [scrollContainerHeight, setScrollContainerHeight] = useState(400);
     const scrollContainerRef = useRef(null);
-    const [scrollPos, setScrollPos] = useState(0);
+    const scrollPosRef = useRef(0);
 
     const [accordionActiveKey, setAccordionActiveKey] = useState("")
 
@@ -40,7 +40,7 @@ const Analysis = () => {
     })
 
     const handleScroll = () => {
-        setScrollPos(scrollContainerRef.current.scrollTop)
+        scrollPosRef.current = scrollContainerRef.current.scrollTop;
     }
 
     // const clampScrollContainerHeight = (height) => {
@@ -94,7 +94,6 @@ const Analysis = () => {
     const onFoodClick = (food) => {
         setCurrentFood({ food, num: 0, isGram: false });
         setIsModalEnabled(true);
-        setScrollPos(scrollContainerRef.current.scrollTop);
     }
 
     const onModalExit = () => {
@@ -175,10 +174,10 @@ const Analysis = () => {
     useEffect(() => {
         handleWindowResize();
         window.addEventListener('resize', handleWindowResize);
-        //scrollContainerRef.current.addEventListener('scroll', handleScroll);
+        scrollContainerRef.current.addEventListener('scroll', handleScroll);
         return (() => {
             window.removeEventListener('resize', handleWindowResize);
-            //scrollContainerRef.current.addEventListener('scroll', handleScroll);
+            scrollContainerRef.current.addEventListener('scroll', handleScroll);
         })
     }, []);
 
@@ -193,7 +192,6 @@ const Analysis = () => {
 
     useEffect(() => {
         sumAllNutrients();
-        scrollContainerRef.current.scrollTop = scrollPos;
     }, [isModalEnabled, selectedFoodList]);
 
     useEffect(() => {
@@ -203,6 +201,10 @@ const Analysis = () => {
             setAccordionActiveKey("")
         }
     }, [selectedFoodList])
+
+    useEffect(()=> {
+        scrollContainerRef.current.scrollTop = scrollPosRef.current;
+    })
 
     return (
         <div>
@@ -229,7 +231,7 @@ const Analysis = () => {
                 </Row>
                 <Row sm={3} className='mt-3 mb-5'>
                     <Col sm={{ span: 10, offset: 1 }} md={{ span: 8, offset: 2 }}>
-                        <ScrollContainer as='div' ref={scrollContainerRef}>
+                        <ScrollContainer as='div' ref={scrollContainerRef} onScroll={handleScroll}>
                             {/* 검색어와 일치하는 음식들을 나열*/}
                             <ListGroup as='ul'>
                                 {foodArr.map((element) =>
@@ -294,11 +296,8 @@ const Analysis = () => {
                     </Col>
                 </Row>
             </Container>
-
         </div>
     )
-
-
 }
 
 

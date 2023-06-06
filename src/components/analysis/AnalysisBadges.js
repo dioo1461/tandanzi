@@ -8,13 +8,12 @@ export const CarbohydrateBadge = () => {
 
 export const ProteinBadge = () => {
     return (
-        <Badge bg='info'>단</Badge>
+        <Badge className='ms-3' bg='info'>단</Badge>
     )
 }
 
-
 export const FatBadge = () => {
     return (
-        <Badge bg='danger'>지</Badge>
+        <Badge className='ms-3' bg='danger'>지</Badge>
     )
 }
