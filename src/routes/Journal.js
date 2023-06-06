@@ -23,60 +23,62 @@ const Journal = () => {
     }
 
     const makeCalendar = () => {
-        var { prevLastDate, prevLastDay } = calculatePrevDate();
-        var { currentLastDate, currentLastDay } = calculateLastDate();
-        // list -> [행][열][0] : 날짜, [행][열][1]: 이번 달 날짜인지(bool)
-        var list = Array(6).fill([0, true]).map(() => Array(7).fill([0, true]));
+        const { prevLastDate, prevLastDay } = calculatePrevDate();
+        const { currentLastDate, currentLastDay } = calculateLastDate();
 
-        for (let i = 0; i < 7; i++) {
-            var date = prevLastDate - (prevLastDay - i);
-            if (date > prevLastDate) {
-                list[0][i] = [-(prevLastDay - i), true];
-            } else {
-                // 저번 달 날짜
-                list[0][i] = [prevLastDate - (prevLastDay - i), false];
-            }
+        const list = Array(6).fill().map(() => Array(7).fill([0, true]));
+
+        let index = 0;
+        let date = prevLastDate - prevLastDay;
+
+        // fill out dates of prev month
+        for (index; date < prevLastDate; index++) {
+            const row = Math.floor(index / 7);
+            const col = index % 7;
+            list[row][col] = [date, false];
+            date++;
         }
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 7; j++) {
-                if (list[0][6][0] === prevLastDate) {
-                    list[i + 1][j] = [0 + i * 7 + j + 1, true];
-                } else {
-                    list[i + 1][j] = [list[0][6][0] + i * 7 + j + 1, true];
-                }
-            }
+        // fill out dates of this month
+        date = 1;
+        for (index; index < 42 && date <= currentLastDate; index++) {
+            const row = Math.floor(index / 7);
+            const col = index % 7;
+            list[row][col] = [date, true];
+            date++;
         }
-        for (let i = 0; i < 7; i++) {
-            var date = currentLastDate - (currentLastDay - i);
-            if (date > currentLastDate) {
-                //다음 달 날짜
-                list[5][i] = [-(currentLastDay - i), false];
-            } else {
-                list[5][i] = [currentLastDate - (currentLastDay - i), true];
-            }
+        // fill out dates of next month
+        date = 1;
+        for (index; index < 42; index++) {
+            const row = Math.floor(index / 7);
+            const col = index % 7;
+            list[row][col] = [date, false];
+            date++;
         }
+
         console.log(list);
         return list;
-    }
+    };
+
+
 
     const onPrevMonthButtonClick = () => {
-        
-        if (currentMonth-1 == 0) {
+
+        if (currentMonth - 1 == 0) {
             setCurrentMonth(12);
-            setCurrentYear(prev=>prev-1);
+            setCurrentYear(prev => prev - 1);
         } else {
-            setCurrentMonth(prev=>prev-1)
+            setCurrentMonth(prev => prev - 1)
         }
 
 
     }
 
     const onNextMonthButtonClick = () => {
-        if (currentMonth+1 == 13) {
+        if (currentMonth + 1 == 13) {
             setCurrentMonth(1);
-            setCurrentYear(prev=>prev+1);
+            setCurrentYear(prev => prev + 1);
         } else {
-            setCurrentMonth(prev=>prev+1)
+            setCurrentMonth(prev => prev + 1)
         }
     }
 
@@ -84,11 +86,18 @@ const Journal = () => {
         <Container fluid>
             <Row>
                 <Col>
-                
-                    <h3 style={{display:"flex", justifyContent:"center"}}>
-                    <Button onClick={onPrevMonthButtonClick}>{"<"}</Button>
+                    <h3 style={{ display: "flex", justifyContent: "center" }}>
+                        <Button
+                            variant='outline-secondary'
+                            className='me-3'
+                            onClick={onPrevMonthButtonClick}>{"<"}
+                        </Button>
                         {currentYear}년 {currentMonth}월
-                        <Button onClick={onNextMonthButtonClick}>{">"}</Button>
+                        <Button
+                            variant='outline-secondary'
+                            className='ms-3'
+                            onClick={onNextMonthButtonClick}>{">"}
+                        </Button>
                     </h3>
                 </Col>
             </Row>
@@ -113,7 +122,7 @@ const Journal = () => {
                                         <td
                                             key={dateIndex}
                                             className='hoverable-cell'
-                                            style={{ color: date[1] === true ? "black" : "lightGray" }}>
+                                            style={{ color: date[1] === true ? "gray" : "lightGray" }}>
                                             {date[0]}
                                         </td>
                                     ))}
