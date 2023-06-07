@@ -32,7 +32,7 @@ const Journal = () => {
         let date = prevLastDate - prevLastDay;
 
         // fill out dates of prev month
-        for (index; date < prevLastDate; index++) {
+        for (index; date <= prevLastDate; index++) {
             const row = Math.floor(index / 7);
             const col = index % 7;
             list[row][col] = [date, false];
@@ -62,15 +62,12 @@ const Journal = () => {
 
 
     const onPrevMonthButtonClick = () => {
-
         if (currentMonth - 1 == 0) {
             setCurrentMonth(12);
             setCurrentYear(prev => prev - 1);
         } else {
             setCurrentMonth(prev => prev - 1)
         }
-
-
     }
 
     const onNextMonthButtonClick = () => {
@@ -102,7 +99,7 @@ const Journal = () => {
                 </Col>
             </Row>
             <Row>
-                <Col>
+                <Col lg={{span:10, offset:1}} xl={{span:10, offset:1}} xxl={{span:8, offset:2}}>
                     <Table bordered className='calendar'>
                         <thead>
                             <tr>
