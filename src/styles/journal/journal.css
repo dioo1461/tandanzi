@@ -1,5 +1,6 @@
 .calendar {
   text-align: center;
+  font-size: "7px";
 }
 .calendar tbody tr {
   height: 110px;
