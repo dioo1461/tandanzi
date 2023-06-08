@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import foodData from 'data/Foods.json';
 import FoodSelectModal from 'components/analysis/FoodSelectModal';
 import SelectedFoodDisplay from 'components/analysis/SelectedFoodDisplay';
-import { Form, Button, Container, InputGroup, Collapse, Row, Col, ListGroup, Accordion } from 'react-bootstrap';
+import { Form, Button, Container, InputGroup, Collapse, Row, Col, ListGroup, Accordion, Modal } from 'react-bootstrap';
 import CategorySelect from 'components/analysis/CategorySelect';
 import styled from 'styled-components';
 import { CarbohydrateBadge, FatBadge, ProteinBadge } from 'components/analysis/AnalysisBadges';
+
 
 const Analysis = () => {
     const [currentSearching, setCurrentSearching] = useState("");
@@ -32,7 +33,8 @@ const Analysis = () => {
     const scrollContainerRef = useRef(null);
     const scrollPosRef = useRef(0);
 
-    const [accordionActiveKey, setAccordionActiveKey] = useState("")
+    const [accordionActiveKey, setAccordionActiveKey] = useState("");
+    const [isRecordButtonEnabled, setIsRecordButtonEnabled] = useState(false);
 
     const handleWindowResize = () => setScrollContainerHeight(() => {
         let clampedRes = Math.min(Math.max(window.innerHeight - 400, 200), 300);
@@ -164,12 +166,6 @@ const Analysis = () => {
         }
     }
 
-    const ScrollContainer = styled.div`
-    overflow: auto;
-    overflow-x: hidden;
-    height: ${scrollContainerHeight}px;
-    border: 1px solid white;
-    `;
 
     useEffect(() => {
         handleWindowResize();
@@ -197,8 +193,10 @@ const Analysis = () => {
     useEffect(() => {
         if (selectedFoodList.length > 0) {
             setAccordionActiveKey("0")
+            setIsRecordButtonEnabled(true);
         } else {
             setAccordionActiveKey("")
+            setIsRecordButtonEnabled(false);
         }
     }, [selectedFoodList])
 
@@ -220,7 +218,7 @@ const Analysis = () => {
                                 <CategorySelect onCategoriesSelected={onCategoriesSelected} />
                             </div>
                         </Collapse>
-                        <Form>
+                        <Form onSubmit={(e)=>{e.preventDefault()}}>
                             <Form.Label>음식 이름을 입력하세요</Form.Label>
                             <InputGroup>
                                 <Form.Control type='text' onChange={searchOnChange} value={currentSearching} />
@@ -231,7 +229,7 @@ const Analysis = () => {
                 </Row>
                 <Row sm={3} className='mt-3 mb-5'>
                     <Col sm={{ span: 10, offset: 1 }} md={{ span: 8, offset: 2 }}>
-                        <ScrollContainer as='div' ref={scrollContainerRef} onScroll={handleScroll}>
+                        <ScrollContainer as='div' ref={scrollContainerRef} onScroll={handleScroll} height={scrollContainerHeight}>
                             {/* 검색어와 일치하는 음식들을 나열*/}
                             <ListGroup as='ul'>
                                 {foodArr.map((element) =>
@@ -256,7 +254,7 @@ const Analysis = () => {
                         <br />
                         {/*선택한 음식들을 나열, 칼로리를 계산 */}
 
-                        <Accordion activeKey={accordionActiveKey} className='mb-3'>
+                        <Accordion activeKey={isRecordButtonEnabled ? accordionActiveKey : ""} className='mb-3'>
                             <Accordion.Item eventKey="0">
                                 <Accordion.Header onClick={() => {
                                     accordionActiveKey === "0" ?
@@ -294,17 +292,33 @@ const Analysis = () => {
                             </div>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            { isRecordButtonEnabled ?
                             <Button variant='outline-primary' className='mt-4'>
                                 일지에 식단 기록하기
                             </Button>
+                            :
+                            <Button variant='outline-secondary' className='mt-4' disabled>
+                                일지에 식단 기록하기
+                            </Button>
+                            }
                         </div>
                     </Col>
                 </Row>
             </Container>
+            <Modal >
+
+            </Modal>
         </div>
     )
 }
 
-
+ // styled.div가 컴포넌트 내부에서 동적으로 생성되어 성능 저하가 야기될 수 있음
+ // -> 컴포넌트 밖으로 뺀 후 props를 활용하여 프로퍼티를 전달
+ const ScrollContainer = styled.div`
+ overflow: auto;
+ overflow-x: hidden;
+ height: ${props => props.height}px;
+ border: 1px solid white;
+ `;
 
 export default Analysis;
