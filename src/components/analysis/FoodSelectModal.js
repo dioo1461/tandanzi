@@ -12,7 +12,7 @@
 // |- CSS 스타일링이 없어서 모달 창이 깔끔하게 보이지 않습니다.
 import { useState, useEffect } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
-import CalorieCalculation from './CalorieCalculation';
+import { calculateCalories } from './calorieCalculation';
 
 const FoodSelectModal = ({ currentFood, isModalEnabled, onModalExit, getCurrentFoodFromModal }) => {
 
@@ -32,15 +32,16 @@ const FoodSelectModal = ({ currentFood, isModalEnabled, onModalExit, getCurrentF
         }
     }
 
+    useEffect(() => {
+        setCalories(calculateCalories(currentFood.food, displayNum, currentFood.isGram))
+    },)
+
     // isGram=true 또는 false 이면 displayNum을 gramNum 또는 unitNum으로 변경
     useEffect(() => {
         isGram ? setUnitNum(Math.round(displayNum / currentFood.food.gram_per_unit)) :
             setGramNum(displayNum * currentFood.food.gram_per_unit);
     }, [displayNum]);
 
-    const getCalories = (calories) => {
-        setCalories(calories);
-    }
 
     const onSubmit = (event) => {
         event.preventDefault();
@@ -61,12 +62,12 @@ const FoodSelectModal = ({ currentFood, isModalEnabled, onModalExit, getCurrentF
             </Modal.Header>
             <Modal.Body>
                 {currentFood.food.name}
-                <br /> <br/>
+                <br /> <br />
                 <Form onSubmit={onSubmit}>
                     <input type='number' value={displayNum} onChange={onChange} />
                     {` ${isGram ? currentFood.food.unit_name : '인분'}`}
-                    <br/>
-                    <Button variant='light' onClick={toggleUnit}>단위 변경</Button>   
+                    <br />
+                    <Button variant='light' onClick={toggleUnit}>단위 변경</Button>
                     <br />
                     {` 탄 : ${(isGram ? currentFood.food.carbs / currentFood.food.gram_per_unit * displayNum
                         : currentFood.food.carbs * displayNum).toFixed(1)}  단 : 
@@ -76,13 +77,7 @@ const FoodSelectModal = ({ currentFood, isModalEnabled, onModalExit, getCurrentF
                             : currentFood.food.fat * displayNum).toFixed(1)}
                         `}
                     <br />
-                    칼로리 : 
-                    <CalorieCalculation
-                        food={currentFood.food}
-                        num={displayNum}
-                        isGram={isGram}
-                        getCalories={getCalories}
-                    />
+                    칼로리 : {calories} kcal
                 </Form>
                 <br />
             </Modal.Body>
